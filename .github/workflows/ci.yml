@@ -1,0 +1,28 @@
+name: ESLint
+
+on: push
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "14"
+
+      - name: Install ESLint
+        run: |
+          npm install eslint
+          npm install @microsoft/eslint-formatter-sarif
+
+      - name: Run ESLint
+        run: |
+          npx eslint . \
+          --config .eslintrc.js \
+          --ext .js,.jsx,.ts,.tsx \
+          --format @microsoft/eslint-formatter-sarif \
+          --output-file eslint-results.sarif
