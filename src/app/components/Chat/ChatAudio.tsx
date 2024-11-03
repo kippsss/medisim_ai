@@ -6,12 +6,24 @@ interface Props {
 
 export default function ChatAudio({ audioId }: Props) {
   const [progress, setProgress] = useState(0);
+  const [playing, setPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  const handlePlayAudio = () => {
+  const handleAudioPlayOrStop = () => {
     if (audioRef.current) {
-      audioRef.current.play();
+      if (playing) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        setProgress(0);
+      } else {
+        audioRef.current.play();
+      }
     }
+  };
+
+  const handleAudioEnded = () => {
+    setPlaying(false);
+    setProgress(0);
   };
 
   const handleTimeUpdate = () => {
@@ -27,8 +39,14 @@ export default function ChatAudio({ audioId }: Props) {
     const audioElement = audioRef.current;
     if (audioElement) {
       audioElement.addEventListener('timeupdate', handleTimeUpdate);
+      audioElement.addEventListener('play', () => setPlaying(true));
+      audioElement.addEventListener('pause', () => setPlaying(false));
+      audioElement.addEventListener('ended', handleAudioEnded);
       return () => {
         audioElement.removeEventListener('timeupdate', handleTimeUpdate);
+        audioElement.removeEventListener('play', () => setPlaying(true));
+        audioElement.removeEventListener('pause', () => setPlaying(false));
+        audioElement.removeEventListener('ended', handleAudioEnded);
       };
     }
   }, []);
@@ -36,21 +54,12 @@ export default function ChatAudio({ audioId }: Props) {
   return (
     <div className="flex gap-4 items-center my-2">
       <audio ref={audioRef} src={`audio/${audioId}.wav`} />
-      <button className="btn btn-circle" onClick={handlePlayAudio}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
+      <button className="btn btn-circle" onClick={handleAudioPlayOrStop}>
+        <img
+          src={`/icons/${playing ? 'stop' : 'play'}.svg`}
+          alt={playing ? 'Stop' : 'Play'}
           className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+        />
       </button>
       <progress
         className="progress progress-accent w-56"
