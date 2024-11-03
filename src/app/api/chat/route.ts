@@ -28,9 +28,6 @@ export async function POST(req: NextRequest) {
       );
       const audioId = response.choices[0].message.audio.id;
 
-      // Save the audio file to the public folder
-      writeFileSync(`public/audio/${audioId}.wav`, audioData);
-
       // Upkeep the audio file to Supabase
       const { data, error } = await supabase.storage
         .from('audio')
@@ -54,6 +51,50 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     return NextResponse.json(
       { error: `Error fetching chat completion: ${error}` },
+      { status: 500 },
+    );
+  }
+}
+
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const audioId = searchParams.get('audioId');
+
+  if (!audioId) {
+    return NextResponse.json(
+      { error: 'Missing audioId parameter' },
+      { status: 400 },
+    );
+  }
+
+  try {
+    // Fetch the audio file from Supabase storage
+    const { data, error } = await supabase.storage
+      .from('audio')
+      .download(`${audioId}.wav`);
+
+    if (error) {
+      throw new Error(`Error fetching audio from Supabase: ${error.message}`);
+    }
+
+    if (data) {
+      const audioBuffer = await data.arrayBuffer();
+      return new NextResponse(audioBuffer, {
+        status: 200,
+        headers: {
+          'Content-Type': 'audio/wav',
+          'Content-Disposition': `attachment; filename="${audioId}.wav"`,
+        },
+      });
+    }
+
+    return NextResponse.json(
+      { error: 'Audio file not found' },
+      { status: 404 },
+    );
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: `Error fetching audio file: ${error.message}` },
       { status: 500 },
     );
   }

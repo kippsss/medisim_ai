@@ -10,14 +10,31 @@ export default function ChatAudio({ audioId }: Props) {
   const [playing, setPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  const playOrStopAudio = () => {
+  const playAudio = async () => {
+    if (audioRef.current) {
+      // Fetch the audio file Blob from the API route
+      const response = await fetch(`/api/chat?audioId=${audioId}`, {
+        method: 'GET',
+      });
+
+      if (response.ok) {
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        audioRef.current.src = audioUrl;
+        audioRef.current.play();
+      } else {
+        const responseJson = await response.json();
+        console.error('Error fetching audio file:', responseJson.error);
+      }
+    }
+  };
+
+  const stopAudio = async () => {
     if (audioRef.current) {
       if (playing) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
         setProgress(0);
-      } else {
-        audioRef.current.play();
       }
     }
   };
@@ -44,8 +61,7 @@ export default function ChatAudio({ audioId }: Props) {
       audioElement.addEventListener('pause', () => setPlaying(false));
       audioElement.addEventListener('ended', resetAudioProgress);
 
-      // Play the audio when the component mounts
-      audioElement.play();
+      playAudio();
 
       return () => {
         audioElement.removeEventListener('timeupdate', updateAudioProgress);
@@ -58,15 +74,16 @@ export default function ChatAudio({ audioId }: Props) {
 
   return (
     <div className="flex gap-4 items-center my-2">
-      <audio ref={audioRef} src={`audio/${audioId}.wav`} />
-      <button className="btn btn-circle" onClick={playOrStopAudio}>
-        <Image
-          src={`/icons/${playing ? 'stop' : 'play'}.svg`}
-          alt={playing ? 'Stop' : 'Play'}
-          width={24}
-          height={24}
-        />
-      </button>
+      <audio ref={audioRef} />
+      {!playing ? (
+        <button className="btn btn-circle" onClick={playAudio}>
+          <Image src={'icons/play.svg'} alt={'Play'} width={24} height={24} />
+        </button>
+      ) : (
+        <button className="btn btn-circle" onClick={stopAudio}>
+          <Image src={'icons/stop.svg'} alt={'Stop'} width={24} height={24} />
+        </button>
+      )}
       <progress
         className="progress progress-accent w-56"
         value={progress}
