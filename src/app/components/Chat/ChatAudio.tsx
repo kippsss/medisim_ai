@@ -1,11 +1,11 @@
 'use client';
-import { useRef } from 'react';
-
+import { useRef, useState, useEffect } from 'react';
 interface Props {
   audioId: string;
 }
 
 export default function ChatAudio({ audioId }: Props) {
+  const [progress, setProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const handlePlayAudio = () => {
@@ -14,8 +14,27 @@ export default function ChatAudio({ audioId }: Props) {
     }
   };
 
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      const currentTime = audioRef.current.currentTime;
+      const duration = audioRef.current.duration;
+      const progress = (currentTime / duration) * 100;
+      setProgress(progress);
+    }
+  };
+
+  useEffect(() => {
+    const audioElement = audioRef.current;
+    if (audioElement) {
+      audioElement.addEventListener('timeupdate', handleTimeUpdate);
+      return () => {
+        audioElement.removeEventListener('timeupdate', handleTimeUpdate);
+      };
+    }
+  }, []);
+
   return (
-    <div className="my-2">
+    <div className="flex gap-4 items-center my-2">
       <audio ref={audioRef} src={`audio/${audioId}.wav`} />
       <button className="btn btn-circle" onClick={handlePlayAudio}>
         <svg
@@ -33,6 +52,11 @@ export default function ChatAudio({ audioId }: Props) {
           />
         </svg>
       </button>
+      <progress
+        className="progress progress-accent w-56"
+        value={progress}
+        max="100"
+      ></progress>
     </div>
   );
 }
