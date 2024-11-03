@@ -60,7 +60,7 @@ export default function ChatInterface() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col px-40">
       <ChatConversation messages={messages} />
       <ChatInput
         input={input}

@@ -19,7 +19,7 @@ export default function ChatInput({
       <input
         type="text"
         placeholder="Message medisimAI"
-        className="input w-full max-w-xs input-bordered input-accent"
+        className="input w-full input-bordered input-accent mt-12"
         value={input}
         onChange={handleInputChange}
         disabled={disabled}
