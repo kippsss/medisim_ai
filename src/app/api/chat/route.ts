@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     return NextResponse.json(
-      { error: 'Error fetching chat completion' },
+      { error: `Error fetching chat completion: ${error}` },
       { status: 500 },
     );
   }
