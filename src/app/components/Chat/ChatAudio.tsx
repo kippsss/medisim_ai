@@ -42,6 +42,10 @@ export default function ChatAudio({ audioId }: Props) {
       audioElement.addEventListener('play', () => setPlaying(true));
       audioElement.addEventListener('pause', () => setPlaying(false));
       audioElement.addEventListener('ended', resetAudioProgress);
+
+      // Play the audio when the component mounts
+      audioElement.play();
+
       return () => {
         audioElement.removeEventListener('timeupdate', updateAudioProgress);
         audioElement.removeEventListener('play', () => setPlaying(true));
