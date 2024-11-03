@@ -1,6 +1,6 @@
 import { Message } from './schema';
 
-export const systemPrompt = {
+export const SYSTEM_PROMPT = {
   role: 'system',
   content: `
   # Your persona
@@ -24,7 +24,13 @@ export const systemPrompt = {
     `,
 };
 
-export const startingUserMessage: Message = {
+export const STARTING_USER_MESSAGE: Message = {
   role: 'user',
   content: 'Hello! How can I assist you today?',
 };
+
+export const TITLE = 'Welcome to medisimAI';
+
+export const SUBTITLE = ` I am your virtual patient, and have come to see you for treatment. You have to reply me like how a doctor would reply to a patient. To guess my diagnosis, you can say 'You have' followed by the disease name.`;
+
+export const READY_BUTTON_TEXT = "I'm ready";

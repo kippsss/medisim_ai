@@ -4,7 +4,7 @@ import ChatInput from './ChatInput';
 import ChatInitialSelection from './ChatInitialSelection';
 import { useState } from 'react';
 import { Message } from './schema';
-import { systemPrompt, startingUserMessage } from './constants';
+import { SYSTEM_PROMPT, STARTING_USER_MESSAGE } from './constants';
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -27,8 +27,8 @@ export default function Chat() {
 
   const startScenario = async () => {
     setStart(true);
-    setMessages([startingUserMessage]);
-    await chatCompletion(startingUserMessage.content);
+    setMessages([STARTING_USER_MESSAGE]);
+    await chatCompletion(STARTING_USER_MESSAGE.content);
   };
 
   const formatMessages = (messages: Message[], input: string) => {
@@ -43,7 +43,7 @@ export default function Chat() {
       role: 'user',
       content: input,
     };
-    return [systemPrompt, ...chatHistory, userInput];
+    return [SYSTEM_PROMPT, ...chatHistory, userInput];
   };
 
   const chatCompletion = async (input: string) => {
