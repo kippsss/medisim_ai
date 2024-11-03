@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { supabase } from 'lib/supabase';
+import { writeFileSync } from 'fs';
 
 const openai = new OpenAI({
   organization: process.env.OPENAI_ORGANIZATION_ID,
@@ -26,6 +27,11 @@ export async function POST(req: NextRequest) {
         'base64',
       );
       const audioId = response.choices[0].message.audio.id;
+
+      // Save the audio file to the public folder
+      writeFileSync(`public/audio/${audioId}.wav`, audioData);
+
+      // Upkeep the audio file to Supabase
       const { data, error } = await supabase.storage
         .from('audio')
         .upload(`${audioId}.wav`, audioData, {
