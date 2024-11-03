@@ -1,12 +1,9 @@
 "use client";
-
 import { useState } from "react";
+import { Message } from "./schema";
 
 export default function ChatInterface() {
-  const [messages, setMessages] = useState([
-    { role: "user", text: "Hello there!" },
-    { role: "assistant", text: "General Kenobi!" },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +46,7 @@ export default function ChatInterface() {
       <form onSubmit={handleFormSubmit}>
         <input
           type="text"
-          placeholder="Type here"
+          placeholder="Message medisimAI"
           className="input w-full max-w-xs input-bordered input-accent"
           value={input}
           onChange={handleInputChange}
