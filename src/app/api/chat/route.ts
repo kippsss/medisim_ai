@@ -1,3 +1,4 @@
+import { writeFileSync } from 'node:fs';
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
@@ -8,15 +9,32 @@ const openai = new OpenAI({
 });
 
 export async function POST(req: NextRequest) {
-  const payload = await req.json();
+  const messages = await req.json();
 
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o',
-      messages: payload,
+      model: 'gpt-4o-audio-preview',
+      modalities: ['text', 'audio'],
+      audio: { voice: 'alloy', format: 'wav' },
+      messages: messages,
     });
 
-    return NextResponse.json({ message: response.choices[0].message.content });
+    // Write audio data to a file
+    if (response.choices[0].message.audio) {
+      writeFileSync(
+        `public/${response.choices[0].message.audio.id}.wav`,
+        Buffer.from(response.choices[0].message.audio.data, 'base64'),
+        { encoding: 'utf-8' },
+      );
+      return NextResponse.json({
+        message: response.choices[0].message.audio.transcript,
+        audioId: response.choices[0].message.audio.id,
+      });
+    }
+
+    return NextResponse.json({
+      message: response.choices[0].message.content,
+    });
   } catch (error) {
     return NextResponse.json(
       { error: 'Error fetching chat completion' },

@@ -24,20 +24,35 @@ export default function Chat() {
     await chatCompletion(input);
   };
 
+  const formatMessages = (messages: Message[], input: string) => {
+    const systemPrompt = {
+      role: 'system',
+      content: 'You are a helpful assistant.',
+    };
+    const chatHistory = messages.map((message) => {
+      if (message.role === 'user') {
+        return { role: 'user', content: message.content };
+      } else {
+        return { role: 'assistant', audio: { id: message.audioId } };
+      }
+    });
+    const userInput = {
+      role: 'user',
+      content: input,
+    };
+    return [systemPrompt, ...chatHistory, userInput];
+  };
+
   const chatCompletion = async (input: string) => {
     setLoading(true);
-    const payload = [
-      { role: 'system', content: 'You are a helpful assistant.' },
-      ...messages,
-      { role: 'user', content: input },
-    ];
+    const formattedMessages = formatMessages(messages, input);
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(formattedMessages),
       });
 
       const data = await response.json();
@@ -45,6 +60,7 @@ export default function Chat() {
         const assistantResponse: Message = {
           role: 'assistant',
           content: data.message,
+          audioId: data.audioId,
         };
         setMessages((prevMessages) => [...prevMessages, assistantResponse]);
       } else {
