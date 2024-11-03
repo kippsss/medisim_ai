@@ -48,8 +48,10 @@ export default function ChatAudio({ audioId }: Props) {
     if (audioRef.current) {
       const currentTime = audioRef.current.currentTime;
       const duration = audioRef.current.duration;
-      const progress = (currentTime / duration) * 100;
-      setProgress(progress);
+      if (!isNaN(duration) && duration > 0) {
+        const progress = (currentTime / duration) * 100;
+        setProgress(progress);
+      }
     }
   };
 
