@@ -75,7 +75,7 @@ export default function ChatAudio({ audioId }: Props) {
   }, []);
 
   return (
-    <div className="flex gap-4 items-center my-2">
+    <div className="flex gap-4 items-center mt-4">
       <audio ref={audioRef} />
       {!playing ? (
         <button className="btn btn-circle" onClick={playAudio}>
@@ -86,11 +86,7 @@ export default function ChatAudio({ audioId }: Props) {
           <Image src={'icons/stop.svg'} alt={'Stop'} width={24} height={24} />
         </button>
       )}
-      <progress
-        className="progress progress-accent w-56"
-        value={progress}
-        max="100"
-      ></progress>
+      <progress className="progress w-full" value={progress} max="100" />
     </div>
   );
 }
