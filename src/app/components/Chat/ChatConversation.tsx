@@ -1,5 +1,5 @@
-"use client";
-import { Message } from "./schema";
+'use client';
+import { Message } from './schema';
 
 interface Props {
   messages: Message[];
@@ -12,15 +12,15 @@ export default function ChatConversation({ messages }: Props) {
         <div
           key={index}
           className={`chat ${
-            message.role === "assistant" ? "chat-start" : "chat-end"
+            message.role === 'assistant' ? 'chat-start' : 'chat-end'
           } mb-5`}
         >
           <div
             className={`chat-bubble ${
-              message.role === "assistant" ? "" : "chat-bubble-primary"
+              message.role === 'assistant' ? '' : 'chat-bubble-primary'
             }`}
           >
-            {message.text}
+            {message.content}
           </div>
         </div>
       ))}

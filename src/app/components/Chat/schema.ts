@@ -1,4 +1,4 @@
 export interface Message {
-  role: "user" | "assistant";
-  text: string;
+  role: 'user' | 'assistant';
+  content: string;
 }

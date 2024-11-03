@@ -1,27 +1,59 @@
-"use client";
-import { useState } from "react";
-import { Message } from "./schema";
-import ChatConversation from "./ChatConversation";
-import ChatInput from "./ChatInput";
+'use client';
+import ChatConversation from './ChatConversation';
+import ChatInput from './ChatInput';
+import { useState } from 'react';
+import { Message } from './schema';
+import OpenAI from 'openai';
 
 export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (input.trim() !== "") {
+    if (input.trim() !== '') {
       addMessage(input);
-      setInput("");
+      setInput('');
+    }
+    await chatCompletion(input);
+  };
+
+  const chatCompletion = async (input: string) => {
+    const payload = [
+      { role: 'system', content: 'You are a helpful assistant.' },
+      ...messages,
+      { role: 'user', content: input },
+    ];
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        const assistantMessage: Message = {
+          role: 'assistant',
+          content: data.message,
+        };
+        setMessages((prevMessages) => [...prevMessages, assistantMessage]);
+      } else {
+        console.error('Error fetching chat completion:', data.error);
+      }
+    } catch (error) {
+      console.error('Error fetching chat completion:', error);
     }
   };
 
-  const addMessage = (text: string) => {
-    setMessages([...messages, { role: "user", text }]);
+  const addMessage = (content: string) => {
+    setMessages([...messages, { role: 'user', content }]);
   };
 
   return (
