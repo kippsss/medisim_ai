@@ -1,12 +1,13 @@
 "use client";
+
 import { useState } from "react";
 
 export default function ChatInterface() {
-  const [input, setInput] = useState("");
   const [messages, setMessages] = useState([
     { role: "user", text: "Hello there!" },
     { role: "assistant", text: "General Kenobi!" },
   ]);
+  const [input, setInput] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
@@ -14,12 +15,14 @@ export default function ChatInterface() {
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    addMessage(input);
-    setInput("");
+    if (input.trim() !== "") {
+      addMessage(input);
+      setInput("");
+    }
   };
 
   const addMessage = (text: string) => {
-    setMessages([...messages, { role: "user", text: text }]);
+    setMessages([...messages, { role: "user", text }]);
   };
 
   return (
