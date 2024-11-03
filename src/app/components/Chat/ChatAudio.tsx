@@ -9,7 +9,7 @@ export default function ChatAudio({ audioId }: Props) {
   const [playing, setPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  const handleAudioPlayOrStop = () => {
+  const playOrStopAudio = () => {
     if (audioRef.current) {
       if (playing) {
         audioRef.current.pause();
@@ -21,12 +21,12 @@ export default function ChatAudio({ audioId }: Props) {
     }
   };
 
-  const handleAudioEnded = () => {
+  const resetAudioProgress = () => {
     setPlaying(false);
     setProgress(0);
   };
 
-  const handleTimeUpdate = () => {
+  const updateAudioProgress = () => {
     if (audioRef.current) {
       const currentTime = audioRef.current.currentTime;
       const duration = audioRef.current.duration;
@@ -38,15 +38,15 @@ export default function ChatAudio({ audioId }: Props) {
   useEffect(() => {
     const audioElement = audioRef.current;
     if (audioElement) {
-      audioElement.addEventListener('timeupdate', handleTimeUpdate);
+      audioElement.addEventListener('timeupdate', updateAudioProgress);
       audioElement.addEventListener('play', () => setPlaying(true));
       audioElement.addEventListener('pause', () => setPlaying(false));
-      audioElement.addEventListener('ended', handleAudioEnded);
+      audioElement.addEventListener('ended', resetAudioProgress);
       return () => {
-        audioElement.removeEventListener('timeupdate', handleTimeUpdate);
+        audioElement.removeEventListener('timeupdate', updateAudioProgress);
         audioElement.removeEventListener('play', () => setPlaying(true));
         audioElement.removeEventListener('pause', () => setPlaying(false));
-        audioElement.removeEventListener('ended', handleAudioEnded);
+        audioElement.removeEventListener('ended', resetAudioProgress);
       };
     }
   }, []);
@@ -54,7 +54,7 @@ export default function ChatAudio({ audioId }: Props) {
   return (
     <div className="flex gap-4 items-center my-2">
       <audio ref={audioRef} src={`audio/${audioId}.wav`} />
-      <button className="btn btn-circle" onClick={handleAudioPlayOrStop}>
+      <button className="btn btn-circle" onClick={playOrStopAudio}>
         <img
           src={`/icons/${playing ? 'stop' : 'play'}.svg`}
           alt={playing ? 'Stop' : 'Play'}
