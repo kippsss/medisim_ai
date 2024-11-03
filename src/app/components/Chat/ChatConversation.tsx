@@ -1,4 +1,5 @@
 'use client';
+import ChatAudio from './ChatAudio';
 import { Message } from './schema';
 
 interface Props {
@@ -21,6 +22,7 @@ export default function ChatConversation({ messages }: Props) {
             }`}
           >
             {message.content}
+            {message.audioId && <ChatAudio audioId={message.audioId} />}
           </div>
         </div>
       ))}

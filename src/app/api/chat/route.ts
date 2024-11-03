@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     // Write audio data to a file
     if (response.choices[0].message.audio) {
       writeFileSync(
-        `public/${response.choices[0].message.audio.id}.wav`,
+        `public/audio/${response.choices[0].message.audio.id}.wav`,
         Buffer.from(response.choices[0].message.audio.data, 'base64'),
         { encoding: 'utf-8' },
       );
