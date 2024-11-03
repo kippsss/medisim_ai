@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { supabase } from 'lib/supabase';
-import { writeFileSync } from 'fs';
 
 const openai = new OpenAI({
   organization: process.env.OPENAI_ORGANIZATION_ID,
@@ -29,7 +28,7 @@ export async function POST(req: NextRequest) {
       const audioId = response.choices[0].message.audio.id;
 
       // Upkeep the audio file to Supabase
-      const { data, error } = await supabase.storage
+      const { error } = await supabase.storage
         .from('audio')
         .upload(`${audioId}.wav`, audioData, {
           contentType: 'audio/wav',
@@ -92,9 +91,9 @@ export async function GET(req: NextRequest) {
       { error: 'Audio file not found' },
       { status: 404 },
     );
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { error: `Error fetching audio file: ${error.message}` },
+      { error: `Error fetching audio file: ${(error as Error).message}` },
       { status: 500 },
     );
   }

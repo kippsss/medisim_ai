@@ -72,7 +72,7 @@ export default function ChatAudio({ audioId }: Props) {
         audioElement.removeEventListener('ended', resetAudioProgress);
       };
     }
-  }, []);
+  });
 
   return (
     <div className="flex gap-4 items-center my-2">
