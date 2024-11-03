@@ -89,7 +89,7 @@ export default function Chat() {
         <ChatInitialSelection startScenario={startScenario} />
       ) : (
         <>
-          <ChatConversation messages={messages} />
+          <ChatConversation messages={messages} loading={loading} />
           <ChatInput
             input={input}
             handleInputChange={handleInputChange}

@@ -4,9 +4,10 @@ import { Message } from './schema';
 
 interface Props {
   messages: Message[];
+  loading: boolean;
 }
 
-export default function ChatConversation({ messages }: Props) {
+export default function ChatConversation({ messages, loading }: Props) {
   return (
     <div>
       {messages.map((message, index) => (
@@ -26,6 +27,7 @@ export default function ChatConversation({ messages }: Props) {
           </div>
         </div>
       ))}
+      {loading && <span className="loading loading-dots loading-md"></span>}
     </div>
   );
 }
