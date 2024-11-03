@@ -1,6 +1,7 @@
 'use client';
 import ChatConversation from './ChatConversation';
 import ChatInput from './ChatInput';
+import ChatInitialSelection from './ChatInitialSelection';
 import { useState } from 'react';
 import { Message } from './schema';
 
@@ -82,14 +83,19 @@ export default function Chat() {
         start ? 'justify-between' : 'justify-center'
       }`}
     >
-      {!start && <h1 className="text-5xl font-bold">Let&apos;s get started</h1>}
-      <ChatConversation messages={messages} />
-      <ChatInput
-        input={input}
-        handleInputChange={handleInputChange}
-        handleFormSubmit={handleFormSubmit}
-        disabled={loading}
-      />
+      {!start ? (
+        <ChatInitialSelection />
+      ) : (
+        <>
+          <ChatConversation messages={messages} />
+          <ChatInput
+            input={input}
+            handleInputChange={handleInputChange}
+            handleFormSubmit={handleFormSubmit}
+            disabled={loading}
+          />
+        </>
+      )}
     </div>
   );
 }
