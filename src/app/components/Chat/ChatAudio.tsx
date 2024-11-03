@@ -1,5 +1,6 @@
 'use client';
 import { useRef, useState, useEffect } from 'react';
+import Image from 'next/image';
 interface Props {
   audioId: string;
 }
@@ -59,10 +60,11 @@ export default function ChatAudio({ audioId }: Props) {
     <div className="flex gap-4 items-center my-2">
       <audio ref={audioRef} src={`audio/${audioId}.wav`} />
       <button className="btn btn-circle" onClick={playOrStopAudio}>
-        <img
+        <Image
           src={`/icons/${playing ? 'stop' : 'play'}.svg`}
           alt={playing ? 'Stop' : 'Play'}
-          className="h-6 w-6"
+          width={24}
+          height={24}
         />
       </button>
       <progress
