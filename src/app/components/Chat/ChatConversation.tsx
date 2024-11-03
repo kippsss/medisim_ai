@@ -7,7 +7,7 @@ interface Props {
 
 export default function ChatConversation({ messages }: Props) {
   return (
-    <>
+    <div>
       {messages.map((message, index) => (
         <div
           key={index}
@@ -24,6 +24,6 @@ export default function ChatConversation({ messages }: Props) {
           </div>
         </div>
       ))}
-    </>
+    </div>
   );
 }

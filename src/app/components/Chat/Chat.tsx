@@ -3,12 +3,12 @@ import ChatConversation from './ChatConversation';
 import ChatInput from './ChatInput';
 import { useState } from 'react';
 import { Message } from './schema';
-import OpenAI from 'openai';
 
-export default function ChatInterface() {
+export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [start, setStart] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
@@ -19,6 +19,7 @@ export default function ChatInterface() {
     if (input.trim() !== '') {
       addMessage(input);
       setInput('');
+      setStart(true);
     }
     await chatCompletion(input);
   };
@@ -60,7 +61,12 @@ export default function ChatInterface() {
   };
 
   return (
-    <div className="flex flex-col px-40">
+    <div
+      className={`flex flex-col w-full p-40 min-h-screen ${
+        start ? 'justify-between' : 'justify-center'
+      }`}
+    >
+      {!start && <h1 className="text-5xl font-bold">Let's get started</h1>}
       <ChatConversation messages={messages} />
       <ChatInput
         input={input}
