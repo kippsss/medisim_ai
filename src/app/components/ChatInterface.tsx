@@ -2,10 +2,25 @@
 import { useState } from "react";
 
 export default function ChatInterface() {
+  const [input, setInput] = useState("");
   const [messages, setMessages] = useState([
     { role: "user", text: "Hello there!" },
     { role: "assistant", text: "General Kenobi!" },
   ]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    addMessage(input);
+    setInput("");
+  };
+
+  const addMessage = (text: string) => {
+    setMessages([...messages, { role: "user", text: text }]);
+  };
 
   return (
     <div className="flex flex-col">
@@ -28,11 +43,15 @@ export default function ChatInterface() {
       ))}
 
       {/* Chat Input */}
-      <input
-        type="text"
-        placeholder="Type here"
-        className="input w-full max-w-xs"
-      />
+      <form onSubmit={handleFormSubmit}>
+        <input
+          type="text"
+          placeholder="Type here"
+          className="input w-full max-w-xs input-bordered input-accent"
+          value={input}
+          onChange={handleInputChange}
+        />
+      </form>
     </div>
   );
 }
