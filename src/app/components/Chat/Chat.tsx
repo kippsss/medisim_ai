@@ -4,6 +4,7 @@ import ChatInput from './ChatInput';
 import ChatInitialSelection from './ChatInitialSelection';
 import { useState } from 'react';
 import { Message } from './schema';
+import { systemPrompt, startingUserMessage } from './constants';
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -20,16 +21,17 @@ export default function Chat() {
     if (input.trim() !== '') {
       addMessage(input);
       setInput('');
-      setStart(true);
     }
     await chatCompletion(input);
   };
 
+  const startScenario = async () => {
+    setStart(true);
+    setMessages([startingUserMessage]);
+    await chatCompletion(startingUserMessage.content);
+  };
+
   const formatMessages = (messages: Message[], input: string) => {
-    const systemPrompt = {
-      role: 'system',
-      content: 'You are a helpful assistant.',
-    };
     const chatHistory = messages.map((message) => {
       if (message.role === 'user') {
         return { role: 'user', content: message.content };
@@ -84,7 +86,7 @@ export default function Chat() {
       }`}
     >
       {!start ? (
-        <ChatInitialSelection />
+        <ChatInitialSelection startScenario={startScenario} />
       ) : (
         <>
           <ChatConversation messages={messages} />
