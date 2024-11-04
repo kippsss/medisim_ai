@@ -8,21 +8,22 @@ export default function Setup() {
     router.push('/chat');
   };
 
+  const diagnoses = ['Common cold', 'Cough', 'Diabetes', 'Asthma'];
+
   return (
     <div className="flex flex-col p-40 h-screen justify-center">
       <h1 className="text-5xl font-bold">{TITLE}</h1>
       <div className="flex flex-row mt-20">
-        <div className="flex flex-row justify-center w-1/2">
-          <ul className="menu bg-base-200 rounded-box w-56">
-            <li>
-              <a>Item 1</a>
-            </li>
-            <li>
-              <a>Item 2</a>
-            </li>
-            <li>
-              <a>Item 3</a>
-            </li>
+        <div className="flex flex-row justify-center w-1/2 form-control">
+          <ul className="menu bg-base-200 rounded-box w-full">
+            {diagnoses.map((diagnosis, index) => (
+              <li key={index}>
+                <label className="label cursor-pointer">
+                  <span className="label-text">{diagnosis}</span>
+                  <input type="checkbox" className="checkbox" defaultChecked />
+                </label>
+              </li>
+            ))}
           </ul>
         </div>
         <div className="flex flex-row justify-center w-1/2">
