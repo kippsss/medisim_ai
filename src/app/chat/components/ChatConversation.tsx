@@ -1,6 +1,6 @@
 'use client';
 import ChatAudio from './ChatAudio';
-import { Message } from './schema';
+import { Message } from '../schema';
 
 interface Props {
   messages: Message[];
