@@ -31,6 +31,6 @@ export const STARTING_USER_MESSAGE: Message = {
 
 export const TITLE = 'Welcome to medisimAI';
 
-export const SUBTITLE = ` I am your virtual patient, and have come to see you for treatment. You have to reply me like how a doctor would reply to a patient. To guess my diagnosis, you can say 'You have' followed by the disease name.`;
+export const SUBTITLE = `Your virtual patient is here for treatment — can you diagnose me? Ask questions, assess symptoms, and respond like a doctor. When you’re ready, diagnose me. Let’s see if you get it right!`;
 
 export const READY_BUTTON_TEXT = "I'm ready";
