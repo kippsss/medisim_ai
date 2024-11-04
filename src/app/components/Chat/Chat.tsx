@@ -61,7 +61,7 @@ export default function Chat() {
         data = JSON.parse(process.env.NEXT_PUBLIC_MOCK_OPENAI_RESPONSE);
         responseOk = true;
       } else {
-        response = await fetch('/api/chat', {
+        response = await fetch('/api/chat/tts-chat', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

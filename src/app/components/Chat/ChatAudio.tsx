@@ -13,7 +13,7 @@ export default function ChatAudio({ audioId }: Props) {
   const playAudio = async () => {
     if (audioRef.current) {
       // Fetch the audio file Blob from the API route
-      const response = await fetch(`/api/chat?audioId=${audioId}`, {
+      const response = await fetch(`/api/chat/tts-chat?audioId=${audioId}`, {
         method: 'GET',
       });
 
