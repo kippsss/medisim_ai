@@ -1,7 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { TITLE, BUTTON_TEXT } from './constants';
-import { useState } from 'react';
+import { useDiagnoses } from '../contexts/DiagnosesContext';
 
 export default function Setup() {
   const router = useRouter();
@@ -9,17 +9,11 @@ export default function Setup() {
     router.push('/chat');
   };
 
-  const diagnosesString = process.env.NEXT_PUBLIC_DIAGNOSES || '';
-  const diagnoses = diagnosesString.split(',');
-
-  const [selectedDiagnoses, setSelectedDiagnoses] = useState(diagnoses);
+  const { diagnoses, setDiagnoses } = useDiagnoses();
 
   const handleCheckboxChange = (diagnosis: string) => {
-    setSelectedDiagnoses((prevSelectedDiagnoses) =>
-      prevSelectedDiagnoses.includes(diagnosis)
-        ? prevSelectedDiagnoses.filter((item) => item !== diagnosis)
-        : [...prevSelectedDiagnoses, diagnosis],
-    );
+    const isChecked = !diagnoses[diagnosis];
+    setDiagnoses({ ...diagnoses, [diagnosis]: isChecked });
   };
 
   return (
@@ -28,14 +22,14 @@ export default function Setup() {
       <div className="flex flex-row mt-20">
         <div className="flex flex-row justify-center w-1/2 form-control">
           <ul className="menu bg-base-200 rounded-box w-full max-h-64 overflow-y-auto flex-nowrap">
-            {diagnoses.map((diagnosis, index) => (
+            {Object.keys(diagnoses).map((diagnosis, index) => (
               <li key={index}>
                 <label className="label cursor-pointer">
                   <span className="label-text">{diagnosis}</span>
                   <input
                     type="checkbox"
                     className="checkbox"
-                    checked={selectedDiagnoses.includes(diagnosis)}
+                    checked={diagnoses[diagnosis]}
                     onChange={() => handleCheckboxChange(diagnosis)}
                   />
                 </label>
