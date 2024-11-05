@@ -7,7 +7,10 @@ import { SYSTEM_PROMPT, STARTING_USER_MESSAGE } from './constants';
 import { useDiagnoses } from '../contexts/DiagnosesContext';
 
 export default function Chat() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    SYSTEM_PROMPT,
+    STARTING_USER_MESSAGE,
+  ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -17,12 +20,38 @@ export default function Chat() {
   const { diagnoses } = useDiagnoses();
 
   useEffect(() => {
-    const startChat = async () => {
-      setMessages([STARTING_USER_MESSAGE]);
-      await chatCompletion(STARTING_USER_MESSAGE.content);
-    };
-    startChat();
-  }, []);
+    // This effect will run whenever the messages state changes
+    if (
+      messages.length !== 0 &&
+      messages[messages.length - 1].role === 'user'
+    ) {
+      chatCompletion(messages);
+    }
+  }, [messages]);
+
+  const addMessage = (content: string) => {
+    setMessages([...messages, { role: 'user', content }]);
+  };
+
+  const chatCompletion = async (messages: Message[]) => {
+    setLoading(true);
+    const response = await fetch('/api/chat/ttt-chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(messages),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: data.message,
+      };
+      setMessages((prevMessages) => [...prevMessages, assistantMessage]);
+    }
+    setLoading(false);
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
@@ -34,77 +63,7 @@ export default function Chat() {
       addMessage(input);
       setInput('');
     }
-    await chatCompletion(input);
-  };
-
-  const formatMessages = (messages: Message[], input: string) => {
-    if (modality === 'ttt') {
-      const chatHistory = messages.map((message) => {
-        return { role: message.role, content: message.content };
-      });
-
-      const userInput = {
-        role: 'user',
-        content: input,
-      };
-
-      return [SYSTEM_PROMPT, ...chatHistory, userInput];
-    } else {
-      throw new Error(`Modality '${modality}' not supported`);
-    }
-    // } else {
-    //   if (message.role === 'user') {
-    //     return { role: 'user', content: message.content };
-    //   } else {
-    //     return { role: 'assistant', audio: { id: message.audioId } };
-    //   }
-    // }
-  };
-
-  const chatCompletion = async (input: string) => {
-    setLoading(true);
-    const formattedMessages = formatMessages(messages, input);
-    try {
-      let data;
-      let response;
-      let responseOk;
-      if (
-        process.env.NEXT_PUBLIC_MOCK_OPENAI_API == 'true' &&
-        process.env.NEXT_PUBLIC_MOCK_OPENAI_RESPONSE
-      ) {
-        response = undefined;
-        data = JSON.parse(process.env.NEXT_PUBLIC_MOCK_OPENAI_RESPONSE);
-        responseOk = true;
-      } else {
-        response = await fetch('/api/chat/tts-chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formattedMessages),
-        });
-        data = await response.json();
-        responseOk = response.ok;
-      }
-
-      if (responseOk) {
-        const assistantResponse: Message = {
-          role: 'assistant',
-          content: data.message,
-          audioId: data.audioId,
-        };
-        setMessages((prevMessages) => [...prevMessages, assistantResponse]);
-      } else {
-        console.error('Error fetching chat completion:', data.error);
-      }
-    } catch (error) {
-      console.error('Error fetching chat completion:', error);
-    }
-    setLoading(false);
-  };
-
-  const addMessage = (content: string) => {
-    setMessages([...messages, { role: 'user', content }]);
+    addMessage(input);
   };
 
   return (

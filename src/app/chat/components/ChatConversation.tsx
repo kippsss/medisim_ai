@@ -10,21 +10,27 @@ interface Props {
 export default function ChatConversation({ messages, loading }: Props) {
   return (
     <div>
-      {messages.map((message, index) => (
-        <div
-          key={index}
-          className={`chat ${
-            message.role === 'assistant' ? 'chat-start' : 'chat-end'
-          } mb-8`}
-        >
+      {messages.map((message, index) => {
+        if (message.role === 'system') {
+          return null; // Skip rendering if the role is 'system'
+        }
+
+        return (
           <div
-            className={`${message.role === 'assistant' ? '' : 'chat-bubble'}`}
+            key={index}
+            className={`chat ${
+              message.role === 'assistant' ? 'chat-start' : 'chat-end'
+            } mb-8`}
           >
-            {message.content}
-            {message.audioId && <ChatAudio audioId={message.audioId} />}
+            <div
+              className={`${message.role === 'assistant' ? '' : 'chat-bubble'}`}
+            >
+              {message.content}
+              {message.audioId && <ChatAudio audioId={message.audioId} />}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
       {loading && <span className="loading loading-dots loading-md"></span>}
     </div>
   );

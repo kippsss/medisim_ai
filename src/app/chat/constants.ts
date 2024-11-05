@@ -1,6 +1,6 @@
 import { Message } from './schema';
 
-export const SYSTEM_PROMPT = {
+export const SYSTEM_PROMPT: Message = {
   role: 'system',
   content: `
   # Your persona
