@@ -1,6 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { TITLE, BUTTON_TEXT } from './constants';
+import { useState } from 'react';
 
 export default function Setup() {
   const router = useRouter();
@@ -10,6 +11,16 @@ export default function Setup() {
 
   const diagnosesString = process.env.NEXT_PUBLIC_DIAGNOSES || '';
   const diagnoses = diagnosesString.split(',');
+
+  const [selectedDiagnoses, setSelectedDiagnoses] = useState(diagnoses);
+
+  const handleCheckboxChange = (diagnosis: string) => {
+    setSelectedDiagnoses((prevSelectedDiagnoses) =>
+      prevSelectedDiagnoses.includes(diagnosis)
+        ? prevSelectedDiagnoses.filter((item) => item !== diagnosis)
+        : [...prevSelectedDiagnoses, diagnosis],
+    );
+  };
 
   return (
     <div className="flex flex-col p-40 h-screen justify-center">
@@ -21,7 +32,12 @@ export default function Setup() {
               <li key={index}>
                 <label className="label cursor-pointer">
                   <span className="label-text">{diagnosis}</span>
-                  <input type="checkbox" className="checkbox" defaultChecked />
+                  <input
+                    type="checkbox"
+                    className="checkbox"
+                    checked={selectedDiagnoses.includes(diagnosis)}
+                    onChange={() => handleCheckboxChange(diagnosis)}
+                  />
                 </label>
               </li>
             ))}
