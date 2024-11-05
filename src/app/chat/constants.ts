@@ -26,7 +26,7 @@ export const SYSTEM_PROMPT = {
 
 export const STARTING_USER_MESSAGE: Message = {
   role: 'user',
-  content: 'Hello! How can I assist you today?',
+  content: 'Hello! How can I help you today?',
 };
 
 export const TITLE = 'Welcome to medisimAI';
