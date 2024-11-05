@@ -3,14 +3,11 @@ import ChatConversation from './components/ChatConversation';
 import ChatInput from './components/ChatInput';
 import { useEffect, useState } from 'react';
 import { Message } from './schema';
-import { SYSTEM_PROMPT, STARTING_USER_MESSAGE } from './constants';
+import { SYSTEM_CONTENT, STARTING_USER_MESSAGE } from './constants';
 import { useDiagnoses } from '../contexts/DiagnosesContext';
 
 export default function Chat() {
-  const [messages, setMessages] = useState<Message[]>([
-    SYSTEM_PROMPT,
-    STARTING_USER_MESSAGE,
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +17,6 @@ export default function Chat() {
   const { diagnoses } = useDiagnoses();
 
   useEffect(() => {
-    // This effect will run whenever the messages state changes
     if (
       messages.length !== 0 &&
       messages[messages.length - 1].role === 'user'
@@ -28,6 +24,19 @@ export default function Chat() {
       chatCompletion(messages);
     }
   }, [messages]);
+
+  useEffect(() => {
+    const possibleDiagnoses = Object.keys(diagnoses).filter(
+      (key) => diagnoses[key],
+    );
+    const randomDiagnosis =
+      possibleDiagnoses[Math.floor(Math.random() * possibleDiagnoses.length)];
+    const systemContent = SYSTEM_CONTENT + randomDiagnosis;
+    setMessages([
+      { role: 'system', content: systemContent },
+      STARTING_USER_MESSAGE,
+    ]);
+  }, []);
 
   const addMessage = (content: string) => {
     setMessages([...messages, { role: 'user', content }]);
