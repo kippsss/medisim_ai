@@ -8,7 +8,7 @@ export default function Setup() {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col gap-12 p-40 h-screen justify-center">
+    <div className="flex flex-col gap-12 px-40 py-20 justify-center">
       <h1 className="text-5xl font-bold">{TITLE}</h1>
       <div className="flex flex-col gap-12">
         <SetupDiagnoses />
