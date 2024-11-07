@@ -1,4 +1,9 @@
 'use client';
+import { useDiagnoses } from '../../contexts/DiagnosesContext';
+
+interface Props {
+  diagnosis: string;
+}
 
 const handleDiagnose = () => {
   const modal = document.getElementById('diagnose-modal');
@@ -7,7 +12,8 @@ const handleDiagnose = () => {
   }
 };
 
-export default function ChatDiagnoseModal() {
+export default function ChatDiagnoseModal({ diagnosis }: Props) {
+  const { diagnoses } = useDiagnoses();
   return (
     <>
       <button className="btn btn-primary" onClick={handleDiagnose}>
@@ -15,10 +21,16 @@ export default function ChatDiagnoseModal() {
       </button>
       <dialog id="diagnose-modal" className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <p className="py-4">
-            Press ESC key or click the button below to close
-          </p>
+          <h3 className="font-bold text-lg">Diagnose me</h3>
+          <ul className="mt-4 menu bg-base-200 rounded-box w-full max-h-64 overflow-y-auto flex-nowrap">
+            {Object.keys(diagnoses).map((diagnosis, index) => (
+              <li key={index}>
+                <label className="label cursor-pointer">
+                  <span className="label-text">{diagnosis}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
           <div className="modal-action">
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}

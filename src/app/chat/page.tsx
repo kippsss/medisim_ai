@@ -88,7 +88,7 @@ export default function Chat() {
           handleFormSubmit={handleFormSubmit}
           disabled={loading}
         />
-        <ChatDiagnoseModal />
+        <ChatDiagnoseModal diagnosis={diagnosis} />
       </div>
     </div>
   );
