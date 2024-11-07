@@ -1,40 +1,21 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { TITLE, BUTTON_TEXT } from './constants';
-import { useDiagnoses } from '../contexts/DiagnosesContext';
+import SetupDiagnoses from './components/SetupDiagnoses';
+import SetupModality from './components/SetupModality';
 
 export default function Setup() {
   const router = useRouter();
-  const { diagnoses, setDiagnoses } = useDiagnoses();
-
-  const handleCheckboxChange = (diagnosis: string) => {
-    const isChecked = !diagnoses[diagnosis];
-    setDiagnoses({ ...diagnoses, [diagnosis]: isChecked });
-  };
 
   return (
     <div className="flex flex-col p-40 h-screen justify-center">
       <h1 className="text-5xl font-bold">{TITLE}</h1>
       <div className="flex flex-row mt-20">
         <div className="flex flex-row justify-center w-1/2 form-control">
-          <ul className="menu bg-base-200 rounded-box w-full max-h-64 overflow-y-auto flex-nowrap">
-            {Object.keys(diagnoses).map((diagnosis, index) => (
-              <li key={index}>
-                <label className="label cursor-pointer">
-                  <span className="label-text">{diagnosis}</span>
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    checked={diagnoses[diagnosis]}
-                    onChange={() => handleCheckboxChange(diagnosis)}
-                  />
-                </label>
-              </li>
-            ))}
-          </ul>
+          <SetupDiagnoses />
         </div>
         <div className="flex flex-row justify-center w-1/2">
-          Modality selection
+          <SetupModality />
         </div>
       </div>
       <button
