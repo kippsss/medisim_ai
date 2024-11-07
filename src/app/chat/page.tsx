@@ -92,7 +92,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex flex-col w-full p-40 min-h-screen justify-between">
+    <div className="flex flex-col w-full px-40 py-20 min-h-screen justify-between">
       <ChatConversation messages={messages} loading={loading} />
       <div className="flex flex-row gap-4">
         <ChatInput
