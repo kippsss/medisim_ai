@@ -28,8 +28,8 @@ export default function SetupDiagnoses() {
 
   return (
     <div className="flex flex-col">
-      <div className="flex flex-row justify-between items-center pl-4 pr-10 py-4">
-        <h3 className="font-bold text-lg">{DIAGNOSES_TEXT}</h3>
+      <div className="flex flex-row justify-between items-center pr-10 py-4">
+        <h3 className="font-bold text-2xl">{DIAGNOSES_TEXT}</h3>
         <input
           type="checkbox"
           className="checkbox"
