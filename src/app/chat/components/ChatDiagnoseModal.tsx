@@ -61,16 +61,19 @@ export default function ChatDiagnoseModal({
           {/* MODAL BODY */}
           {!correct ? (
             <ul className="mt-4 menu bg-base-200 rounded-box w-full max-h-96 overflow-y-auto flex-nowrap">
-              {Object.keys(diagnoses).map((diagnosis, index) => (
-                <li
-                  key={index}
-                  onClick={() => checkAnswer(diagnosis, actualDiagnosis)}
-                >
-                  <label className="label cursor-pointer">
-                    <span className="label-text">{diagnosis}</span>
-                  </label>
-                </li>
-              ))}
+              {Object.entries(diagnoses).map(
+                ([diagnosis, isSelectable], index) =>
+                  isSelectable && (
+                    <li
+                      key={index}
+                      onClick={() => checkAnswer(diagnosis, actualDiagnosis)}
+                    >
+                      <label className="label cursor-pointer">
+                        <span className="label-text">{diagnosis}</span>
+                      </label>
+                    </li>
+                  ),
+              )}
             </ul>
           ) : (
             <div className="flex flex-col gap-8">
