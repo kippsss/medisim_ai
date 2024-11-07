@@ -28,6 +28,7 @@ export default function SetupDiagnoses() {
 
   return (
     <div className="flex flex-col">
+      {/* HEADER */}
       <div className="flex flex-row justify-between items-center pl-2 pr-6 py-4">
         <h3 className="font-bold text-2xl">{DIAGNOSES_TEXT}</h3>
         <input
@@ -37,21 +38,25 @@ export default function SetupDiagnoses() {
           onChange={toggleSelectAll}
         />
       </div>
-      <ul className="menu bg-base-200 rounded-box w-full max-h-64 overflow-y-auto flex-nowrap">
-        {Object.keys(diagnoses).map((diagnosis, index) => (
-          <li key={index}>
-            <label className="label cursor-pointer">
-              <span className="label-text">{diagnosis}</span>
-              <input
-                type="checkbox"
-                className="checkbox"
-                checked={diagnoses[diagnosis]}
-                onChange={() => toggleDiagnosisSelect(diagnosis)}
-              />
-            </label>
-          </li>
-        ))}
-      </ul>
+
+      {/* BODY */}
+      <div>
+        <ul className="menu bg-base-200 rounded-box w-full max-h-64 overflow-y-auto flex-nowrap">
+          {Object.keys(diagnoses).map((diagnosis, index) => (
+            <li key={index}>
+              <label className="label cursor-pointer">
+                <span className="label-text">{diagnosis}</span>
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  checked={diagnoses[diagnosis]}
+                  onChange={() => toggleDiagnosisSelect(diagnosis)}
+                />
+              </label>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
