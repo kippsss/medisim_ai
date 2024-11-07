@@ -9,19 +9,21 @@ interface Props {
 
 export default function ChatConversation({ messages, loading }: Props) {
   return (
-    <div>
+    <div className="flex flex-col gap-8">
       {messages.map((message, index) => {
         if (message.role === 'system') {
           return null; // Skip rendering if the role is 'system'
         }
 
         return (
+          // SPEECH ROW
           <div
             key={index}
             className={`chat ${
               message.role === 'assistant' ? 'chat-start' : 'chat-end'
-            } mb-8`}
+            }`}
           >
+            {/* SPEECH BUBBLE */}
             <div
               className={`${message.role === 'assistant' ? '' : 'chat-bubble'}`}
             >

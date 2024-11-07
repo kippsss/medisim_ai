@@ -14,13 +14,13 @@ export default function Setup() {
         <h1 className="text-5xl font-bold">{TITLE}</h1>
       </div>
 
-      {/* BODY */}
+      {/* CONFIGURATIONS */}
       <div className="flex flex-col gap-12">
         <SetupDiagnoses />
         <SetupModality />
       </div>
 
-      {/* FOOTER */}
+      {/* ACTION BUTTON */}
       <div className="mt-20">
         <button
           className="btn btn-neutral w-full"
