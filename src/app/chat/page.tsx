@@ -28,6 +28,10 @@ export default function Chat() {
   }, [messages]);
 
   useEffect(() => {
+    startScenario();
+  }, []);
+
+  const startScenario = () => {
     const possibleDiagnoses = Object.keys(diagnoses).filter(
       (key) => diagnoses[key],
     );
@@ -39,7 +43,7 @@ export default function Chat() {
       { role: 'system', content: systemContent },
       STARTING_USER_MESSAGE,
     ]);
-  }, []);
+  };
 
   const addMessage = (content: string) => {
     setMessages([...messages, { role: 'user', content }]);
@@ -97,7 +101,10 @@ export default function Chat() {
           handleFormSubmit={handleFormSubmit}
           disabled={loading}
         />
-        <ChatDiagnoseModal actualDiagnosis={actualDiagnosis} />
+        <ChatDiagnoseModal
+          actualDiagnosis={actualDiagnosis}
+          startScenario={startScenario}
+        />
       </div>
     </div>
   );

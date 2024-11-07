@@ -5,10 +5,6 @@ import { useDiagnoses } from '../contexts/DiagnosesContext';
 
 export default function Setup() {
   const router = useRouter();
-  const goToChat = () => {
-    router.push('/chat');
-  };
-
   const { diagnoses, setDiagnoses } = useDiagnoses();
 
   const handleCheckboxChange = (diagnosis: string) => {
@@ -41,7 +37,10 @@ export default function Setup() {
           Modality selection
         </div>
       </div>
-      <button className="btn btn-neutral mt-20" onClick={goToChat}>
+      <button
+        className="btn btn-neutral mt-20"
+        onClick={() => router.push('/chat')}
+      >
         {BUTTON_TEXT}
       </button>
     </div>

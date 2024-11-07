@@ -3,20 +3,30 @@ import { useState } from 'react';
 import { useDiagnoses } from '../../contexts/DiagnosesContext';
 
 import { DIAGNOSE_SELECTION_TITLE, DIAGNOSE_CORRECT_TEXT } from '../constants';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   actualDiagnosis: string;
+  startScenario: () => void;
 }
 
-export default function ChatDiagnoseModal({ actualDiagnosis }: Props) {
+export default function ChatDiagnoseModal({
+  actualDiagnosis,
+  startScenario,
+}: Props) {
   const [correct, setCorrect] = useState(false);
 
+  const router = useRouter();
   const { diagnoses } = useDiagnoses();
 
-  const openDiagnoseModal = () => {
+  const toggleModal = (action: 'open' | 'close') => {
     const modal = document.getElementById('diagnose-modal');
     if (modal) {
-      (modal as HTMLDialogElement).showModal();
+      if (action === 'open') {
+        (modal as HTMLDialogElement).showModal();
+      } else {
+        (modal as HTMLDialogElement).close();
+      }
     }
   };
 
@@ -28,18 +38,27 @@ export default function ChatDiagnoseModal({ actualDiagnosis }: Props) {
     }
   };
 
+  const nextScenario = () => {
+    const goToChat = () => {
+      router.push('/chat');
+    };
+    setCorrect(false);
+    startScenario();
+    toggleModal('close');
+  };
+
   console.log(actualDiagnosis);
 
   return (
     <>
-      <button className="btn btn-primary" onClick={openDiagnoseModal}>
+      <button className="btn btn-primary" onClick={() => toggleModal('open')}>
         Diagnose
       </button>
       <dialog id="diagnose-modal" className="modal">
         <div className="modal-box">
           {/* MODAL HEADER */}
           {!correct && (
-            <h3 className="font-bold text-lg">{DIAGNOSE_SELECTION_TEXT}</h3>
+            <h3 className="font-bold text-lg">{DIAGNOSE_SELECTION_TITLE}</h3>
           )}
 
           {/* MODAL BODY */}
@@ -48,9 +67,7 @@ export default function ChatDiagnoseModal({ actualDiagnosis }: Props) {
               {Object.keys(diagnoses).map((diagnosis, index) => (
                 <li
                   key={index}
-                  onClick={() => {
-                    checkAnswer(diagnosis, actualDiagnosis);
-                  }}
+                  onClick={() => checkAnswer(diagnosis, actualDiagnosis)}
                 >
                   <label className="label cursor-pointer">
                     <span className="label-text">{diagnosis}</span>
@@ -68,13 +85,19 @@ export default function ChatDiagnoseModal({ actualDiagnosis }: Props) {
           )}
 
           {/* MODAL FOOTER */}
-          <div className="modal-action">
+          <div className="modal-action mt-16">
             <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
               {!correct ? (
                 <button className="btn">Close</button>
               ) : (
-                <button className="btn">Next scenario</button>
+                <div className="flex gap-4">
+                  <button className="btn" onClick={() => router.push('/setup')}>
+                    Back to setup
+                  </button>
+                  <button className="btn" onClick={nextScenario}>
+                    Next scenario
+                  </button>
+                </div>
               )}
             </form>
           </div>
