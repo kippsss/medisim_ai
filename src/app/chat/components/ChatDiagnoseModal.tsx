@@ -39,9 +39,6 @@ export default function ChatDiagnoseModal({
   };
 
   const nextScenario = () => {
-    const goToChat = () => {
-      router.push('/chat');
-    };
     setCorrect(false);
     startScenario();
     toggleModal('close');

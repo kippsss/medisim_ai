@@ -13,8 +13,8 @@ export default function Chat() {
   const [loading, setLoading] = useState(false);
   const [actualDiagnosis, setActualDiagnosis] = useState<string>('');
 
-  // For POC, we set modality to be text-to-text (ttt) only
-  const modality = 'ttt';
+  // // For POC, we set modality to be text-to-text (ttt) only
+  // const modality = 'ttt';
 
   const { diagnoses } = useDiagnoses();
 
