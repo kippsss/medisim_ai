@@ -8,8 +8,9 @@ import { useDiagnoses } from '../contexts/DiagnosesContext';
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState<string>('');
   const [loading, setLoading] = useState(false);
+  const [diagnosis, setDiagnosis] = useState<string>('');
 
   // For POC, we set modality to be text-to-text (ttt) only
   const modality = 'ttt';
@@ -31,6 +32,7 @@ export default function Chat() {
     );
     const randomDiagnosis =
       possibleDiagnoses[Math.floor(Math.random() * possibleDiagnoses.length)];
+    setDiagnosis(randomDiagnosis);
     const systemContent = SYSTEM_CONTENT + randomDiagnosis;
     setMessages([
       { role: 'system', content: systemContent },
@@ -78,12 +80,15 @@ export default function Chat() {
   return (
     <div className="flex flex-col w-full p-40 min-h-screen justify-between">
       <ChatConversation messages={messages} loading={loading} />
-      <ChatInput
-        input={input}
-        handleInputChange={handleInputChange}
-        handleFormSubmit={handleFormSubmit}
-        disabled={loading}
-      />
+      <div className="flex flex-row gap-4">
+        <ChatInput
+          input={input}
+          handleInputChange={handleInputChange}
+          handleFormSubmit={handleFormSubmit}
+          disabled={loading}
+        />
+        <button className="btn">Diagnose</button>
+      </div>
     </div>
   );
 }

@@ -15,11 +15,11 @@ export default function ChatInput({
   disabled = false,
 }: Props) {
   return (
-    <form onSubmit={handleFormSubmit}>
+    <form onSubmit={handleFormSubmit} className="w-full">
       <input
         type="text"
         placeholder="Message medisimAI"
-        className="input w-full input-bordered input-accent mt-12"
+        className="input w-full input-bordered input-accent"
         value={input}
         onChange={handleInputChange}
         disabled={disabled}
