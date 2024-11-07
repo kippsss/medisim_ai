@@ -11,7 +11,7 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const [diagnosis, setDiagnosis] = useState<string>('');
+  const [actualDiagnosis, setActualDiagnosis] = useState<string>('');
 
   // For POC, we set modality to be text-to-text (ttt) only
   const modality = 'ttt';
@@ -33,7 +33,7 @@ export default function Chat() {
     );
     const randomDiagnosis =
       possibleDiagnoses[Math.floor(Math.random() * possibleDiagnoses.length)];
-    setDiagnosis(randomDiagnosis);
+    setActualDiagnosis(randomDiagnosis);
     const systemContent = SYSTEM_CONTENT + randomDiagnosis;
     setMessages([
       { role: 'system', content: systemContent },
@@ -47,6 +47,15 @@ export default function Chat() {
 
   const chatCompletion = async (messages: Message[]) => {
     setLoading(true);
+    if (process.env.NEXT_PUBLIC_MOCK_OPENAI_API === 'true') {
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: 'This is a mocked response from the assistant',
+      };
+      setMessages((prevMessages) => [...prevMessages, assistantMessage]);
+      return setLoading(false);
+    }
+
     const response = await fetch('/api/chat/ttt-chat', {
       method: 'POST',
       headers: {
@@ -88,7 +97,7 @@ export default function Chat() {
           handleFormSubmit={handleFormSubmit}
           disabled={loading}
         />
-        <ChatDiagnoseModal diagnosis={diagnosis} />
+        <ChatDiagnoseModal actualDiagnosis={actualDiagnosis} />
       </div>
     </div>
   );
