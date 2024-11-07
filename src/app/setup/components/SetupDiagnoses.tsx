@@ -1,31 +1,57 @@
 'use client';
 
 import { useDiagnoses } from '@/app/contexts/DiagnosesContext';
+import { DIAGNOSES_TEXT } from '../constants';
+import { useState } from 'react';
 
-interface Props {}
+export default function SetupDiagnoses() {
+  const [selectAll, setSelectAll] = useState(true);
 
-export default function SetupDiagnoses({}: Props) {
   const { diagnoses, setDiagnoses } = useDiagnoses();
 
-  const handleCheckboxChange = (diagnosis: string) => {
+  const toggleSelectAll = () => {
+    const newSelectAll = !selectAll;
+    setSelectAll(newSelectAll);
+
+    const updatedDiagnoses = Object.keys(diagnoses).reduce((acc, diagnosis) => {
+      acc[diagnosis] = newSelectAll;
+      return acc;
+    }, {} as { [key: string]: boolean });
+
+    setDiagnoses(updatedDiagnoses);
+  };
+
+  const toggleDiagnosisSelect = (diagnosis: string) => {
     const isChecked = !diagnoses[diagnosis];
     setDiagnoses({ ...diagnoses, [diagnosis]: isChecked });
   };
+
   return (
-    <ul className="menu bg-base-200 rounded-box w-full max-h-64 overflow-y-auto flex-nowrap">
-      {Object.keys(diagnoses).map((diagnosis, index) => (
-        <li key={index}>
-          <label className="label cursor-pointer">
-            <span className="label-text">{diagnosis}</span>
-            <input
-              type="checkbox"
-              className="checkbox"
-              checked={diagnoses[diagnosis]}
-              onChange={() => handleCheckboxChange(diagnosis)}
-            />
-          </label>
-        </li>
-      ))}
-    </ul>
+    <div className="flex flex-col">
+      <div className="flex flex-row justify-between items-center pl-4 pr-10 py-4">
+        <h3 className="font-bold text-lg">{DIAGNOSES_TEXT}</h3>
+        <input
+          type="checkbox"
+          className="checkbox"
+          checked={selectAll}
+          onChange={toggleSelectAll}
+        />
+      </div>
+      <ul className="menu bg-base-200 rounded-box w-full max-h-64 overflow-y-auto flex-nowrap">
+        {Object.keys(diagnoses).map((diagnosis, index) => (
+          <li key={index}>
+            <label className="label cursor-pointer">
+              <span className="label-text">{diagnosis}</span>
+              <input
+                type="checkbox"
+                className="checkbox"
+                checked={diagnoses[diagnosis]}
+                onChange={() => toggleDiagnosisSelect(diagnosis)}
+              />
+            </label>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
