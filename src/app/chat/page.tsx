@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Message } from './schema';
 import { SYSTEM_CONTENT, STARTING_USER_MESSAGE } from './constants';
 import { useDiagnoses } from '../contexts/DiagnosesContext';
+import ChatDiagnoseModal from './components/ChatDiagnoseModal';
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -87,7 +88,7 @@ export default function Chat() {
           handleFormSubmit={handleFormSubmit}
           disabled={loading}
         />
-        <button className="btn">Diagnose</button>
+        <ChatDiagnoseModal />
       </div>
     </div>
   );
