@@ -16,22 +16,32 @@ export default function Setup() {
   const [possibleDiagnoses, setPossibleDiagnoses] = useState<PossibleDiagnoses>(
     {},
   );
+  const [difficulty, setDifficulty] = useState<string>('1');
 
   useEffect(() => {
-    const value = localStorage.getItem('possibleDiagnoses') || undefined;
-    if (value) setPossibleDiagnoses(JSON.parse(value));
+    const possibleDiagnosesValue =
+      localStorage.getItem('possibleDiagnoses') || undefined;
+    if (possibleDiagnosesValue)
+      setPossibleDiagnoses(JSON.parse(possibleDiagnosesValue));
     else setPossibleDiagnoses(parsePossibleDiagnoses());
+
+    setDifficulty(localStorage.getItem('difficulty') || '3');
   }, []);
 
   useEffect(() => setShowDiagnosesAlert(false), [possibleDiagnoses]);
 
   const goToChat = () => {
+    // Save all selected options to local storage
     if (Object.values(possibleDiagnoses).every((value) => value === false))
       return setShowDiagnosesAlert(true);
     localStorage.setItem(
       'possibleDiagnoses',
       JSON.stringify(possibleDiagnoses),
     );
+
+    localStorage.setItem('difficulty', difficulty);
+
+    // Go to chat interface
     router.push('/chat');
   };
 
@@ -54,12 +64,15 @@ export default function Setup() {
 
       {/* CONFIGURATIONS */}
       <div className="flex flex-col gap-12">
-        <div className="flex gap-12">
+        <div className="flex gap-12 flex-col lg:flex-row">
           <SetupDiagnoses
             possibleDiagnoses={possibleDiagnoses}
             setPossibleDiagnoses={setPossibleDiagnoses}
           />
-          <SetupDifficulty>Difficulty</SetupDifficulty>
+          <SetupDifficulty
+            difficulty={difficulty}
+            setDifficulty={setDifficulty}
+          />
         </div>
         <SetupModality />
       </div>

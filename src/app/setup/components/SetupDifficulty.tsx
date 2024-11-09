@@ -1,17 +1,15 @@
 'use client';
 
 import { DIFFICULTY_HEADER, DIFFICULTY_DESCRIPTIONS } from '../constants';
-import { useState } from 'react';
 
-interface Props {}
+interface Props {
+  difficulty: string;
+  setDifficulty: (difficulty: string) => void;
+}
 
-export default function SetupDifficulty({}: Props) {
-  const [difficulty, setDifficulty] = useState<'1' | '2' | '3' | '4' | '5'>(
-    '3',
-  );
-
+export default function SetupDifficulty({ difficulty, setDifficulty }: Props) {
   const changeDifficulty = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDifficulty(event.target.value as '1' | '2' | '3' | '4' | '5');
+    setDifficulty(event.target.value);
   };
 
   return (
