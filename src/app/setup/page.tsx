@@ -16,7 +16,7 @@ export default function Setup() {
   const [possibleDiagnoses, setPossibleDiagnoses] = useState<PossibleDiagnoses>(
     {},
   );
-  const [difficulty, setDifficulty] = useState<string>('1');
+  const [difficulty, setDifficulty] = useState<string>('3');
 
   useEffect(() => {
     const possibleDiagnosesValue =
