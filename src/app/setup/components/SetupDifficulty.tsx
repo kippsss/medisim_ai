@@ -21,11 +21,11 @@ export default function SetupDifficulty({ difficulty, setDifficulty }: Props) {
 
       {/* BODY */}
       <div>
-        <div className="px-5">
+        <div className="px-11">
           <input
             type="range"
             min="1"
-            max="5"
+            max="3"
             value={difficulty}
             className="range"
             step="1"
@@ -34,7 +34,7 @@ export default function SetupDifficulty({ difficulty, setDifficulty }: Props) {
         </div>
         <div className="flex w-full justify-between">
           {DIFFICULTY_LEVEL_LABELS.map((difficultyDescription, index) => (
-            <div key={index} className="flex flex-col items-center gap-2">
+            <div key={index} className="flex flex-col items-center gap-2 w-28">
               <span>|</span>
               <span>{difficultyDescription}</span>
             </div>

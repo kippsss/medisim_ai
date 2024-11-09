@@ -6,13 +6,7 @@ export const DIAGNOSES_HEADER = 'Possible diagnoses';
 
 export const DIFFICULTY_HEADER = 'Difficulty';
 
-export const DIFFICULTY_LEVEL_LABELS = [
-  'Very Easy',
-  'Easy',
-  'Moderate',
-  'Hard',
-  'Very Hard',
-];
+export const DIFFICULTY_LEVEL_LABELS = ['Easy', 'Moderate', 'Challenging'];
 
 export const SELECT_MODEL_HEADER = 'Model';
 
