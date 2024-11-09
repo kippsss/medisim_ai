@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MODALITY_TEXT } from '../constants';
+import { MODALITY_HEADER } from '../constants';
 import { MODALITIES } from '../constants';
 
 export default function SetupModality() {
@@ -17,7 +17,7 @@ export default function SetupModality() {
     <div>
       {/* HEADER */}
       <div className="pl-2 pr-6 py-4">
-        <h3 className="font-bold text-2xl">{MODALITY_TEXT}</h3>
+        <h3 className="font-bold text-2xl">{MODALITY_HEADER}</h3>
       </div>
 
       {/* BODY */}

@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { PossibleDiagnoses } from '../schema';
 import { parsePossibleDiagnoses } from './utils';
 import { Alert } from '@/app//components/Alert';
+import SetupDifficulty from './components/SetupDifficulty';
 
 export default function Setup() {
   const router = useRouter();
@@ -53,10 +54,13 @@ export default function Setup() {
 
       {/* CONFIGURATIONS */}
       <div className="flex flex-col gap-12">
-        <SetupDiagnoses
-          possibleDiagnoses={possibleDiagnoses}
-          setPossibleDiagnoses={setPossibleDiagnoses}
-        />
+        <div className="flex gap-12">
+          <SetupDiagnoses
+            possibleDiagnoses={possibleDiagnoses}
+            setPossibleDiagnoses={setPossibleDiagnoses}
+          />
+          <SetupDifficulty>Difficulty</SetupDifficulty>
+        </div>
         <SetupModality />
       </div>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { DIAGNOSES_TEXT } from '../constants';
+import { DIAGNOSES_HEADER } from '../constants';
 import { useState } from 'react';
 import { PossibleDiagnoses } from '@/app/schema';
 
@@ -38,10 +38,10 @@ export default function SetupDiagnoses({
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       {/* HEADER */}
       <div className="flex flex-row justify-between items-center pl-2 pr-6 py-4">
-        <h3 className="font-bold text-2xl">{DIAGNOSES_TEXT}</h3>
+        <h3 className="font-bold text-2xl">{DIAGNOSES_HEADER}</h3>
         <input
           type="checkbox"
           className="checkbox"
