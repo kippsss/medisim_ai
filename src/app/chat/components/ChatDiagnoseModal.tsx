@@ -1,31 +1,39 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
 import { DIAGNOSE_SELECTION_TITLE, DIAGNOSE_CORRECT_TEXT } from '../constants';
 import { useRouter } from 'next/navigation';
 import { parsePossibleDiagnoses } from '@/app/setup/utils';
 import { PossibleDiagnoses } from '@/app/schema';
+import { selectRandomDiagnosis } from '../../utils';
 
 interface Props {
-  actualDiagnosis: string;
   startScenario: () => void;
 }
 
-export default function ChatDiagnoseModal({
-  actualDiagnosis,
-  startScenario,
-}: Props) {
+export default function ChatDiagnoseModal({ startScenario }: Props) {
   const router = useRouter();
 
   const [correct, setCorrect] = useState(false);
+  const [trueDiagnosis, setTrueDiagnosis] = useState<string>('');
   const [possibleDiagnoses, setPossibleDiagnoses] = useState<PossibleDiagnoses>(
     {},
   );
 
   useEffect(() => {
+    // This will only run when opening the modal for the first time.
     const value = localStorage.getItem('possibleDiagnoses') || undefined;
     if (value) setPossibleDiagnoses(JSON.parse(value));
     else setPossibleDiagnoses(parsePossibleDiagnoses());
+
+    const trueDiagnosisFromLocal =
+      localStorage.getItem('trueDiagnosis') || undefined;
+
+    console.log('trueDiagnosisFromLocal', trueDiagnosisFromLocal);
+    if (trueDiagnosisFromLocal) {
+      console.log('trueDiagnosisFromLocal', trueDiagnosisFromLocal);
+      setTrueDiagnosis(trueDiagnosisFromLocal);
+    }
   }, []);
 
   const toggleModal = (action: 'open' | 'close') => {
@@ -49,11 +57,20 @@ export default function ChatDiagnoseModal({
 
   const nextScenario = () => {
     setCorrect(false);
+
+    // Select a random true diagnosis
+    const randomDiagnosis = selectRandomDiagnosis(
+      Object.keys(possibleDiagnoses).filter(
+        (key) => possibleDiagnoses[key] === true,
+      ),
+    );
+    localStorage.setItem('trueDiagnosis', randomDiagnosis);
+    // Need to set the true diagnosis to the state so that it can be displayed
+    setTrueDiagnosis(randomDiagnosis);
+
     startScenario();
     toggleModal('close');
   };
-
-  console.log(actualDiagnosis);
 
   return (
     <>
@@ -75,7 +92,7 @@ export default function ChatDiagnoseModal({
                   isSelectable && (
                     <li
                       key={index}
-                      onClick={() => checkAnswer(diagnosis, actualDiagnosis)}
+                      onClick={() => checkAnswer(diagnosis, trueDiagnosis)}
                     >
                       <label className="label cursor-pointer">
                         <span className="label-text">{diagnosis}</span>
@@ -88,7 +105,7 @@ export default function ChatDiagnoseModal({
             <div className="flex flex-col gap-8">
               <h3 className="text-2xl">{DIAGNOSE_CORRECT_TEXT}</h3>
               <h1 className="font-bold text-5xl text-center">
-                {actualDiagnosis}
+                {trueDiagnosis}
               </h1>
             </div>
           )}

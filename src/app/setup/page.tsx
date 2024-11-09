@@ -9,6 +9,7 @@ import { parsePossibleDiagnoses } from './utils';
 import { Alert } from '@/app//components/Alert';
 import SetupDifficulty from './components/SetupDifficulty';
 import SetupModel from './components/SetupModel';
+import { selectRandomDiagnosis } from '../utils';
 
 export default function Setup() {
   const router = useRouter();
@@ -38,17 +39,26 @@ export default function Setup() {
   useEffect(() => setShowDiagnosesAlert(false), [possibleDiagnoses]);
 
   const goToChat = () => {
-    // Save all selected options to local storage
+    // Check if at least one possible diagnosis is selected
     if (Object.values(possibleDiagnoses).every((value) => value === false))
       return setShowDiagnosesAlert(true);
+
+    // Select a random true diagnosis
+    const trueDiagnosis = selectRandomDiagnosis(
+      Object.keys(possibleDiagnoses).filter(
+        (key) => possibleDiagnoses[key] === true,
+      ),
+    );
+
+    // Save all configurations to local storage
     localStorage.setItem(
       'possibleDiagnoses',
       JSON.stringify(possibleDiagnoses),
     );
-
+    localStorage.setItem('trueDiagnosis', trueDiagnosis);
     localStorage.setItem('difficulty', difficulty);
-
     localStorage.setItem('model', model);
+    localStorage.setItem('modality', modality);
 
     // Go to chat interface
     router.push('/chat');

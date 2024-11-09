@@ -9,10 +9,10 @@ import { parsePossibleDiagnoses } from '../setup/utils';
 import { PossibleDiagnoses } from '../schema';
 
 export default function Chat() {
+  const [alert, setAlert] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const [actualDiagnosis, setActualDiagnosis] = useState<string>('');
   const [possibleDiagnoses, setPossibleDiagnoses] = useState<PossibleDiagnoses>(
     {},
   );
@@ -40,15 +40,11 @@ export default function Chat() {
   }, [possibleDiagnoses]);
 
   const startScenario = () => {
-    const possibleDiagnosesToSelect = Object.keys(possibleDiagnoses).filter(
-      (key) => possibleDiagnoses[key],
-    );
-    const randomDiagnosis =
-      possibleDiagnosesToSelect[
-        Math.floor(Math.random() * possibleDiagnosesToSelect.length)
-      ];
-    setActualDiagnosis(randomDiagnosis);
-    const systemContent = SYSTEM_CONTENT + randomDiagnosis;
+    const trueDiagnosis = localStorage.getItem('trueDiagnosis') || undefined;
+    console.log(trueDiagnosis);
+    if (!trueDiagnosis) return;
+
+    const systemContent = SYSTEM_CONTENT + trueDiagnosis;
     setMessages([
       { role: 'system', content: systemContent },
       STARTING_USER_MESSAGE,
@@ -114,10 +110,7 @@ export default function Chat() {
           handleFormSubmit={handleFormSubmit}
           disabled={loading}
         />
-        <ChatDiagnoseModal
-          actualDiagnosis={actualDiagnosis}
-          startScenario={startScenario}
-        />
+        <ChatDiagnoseModal startScenario={startScenario} />
       </div>
     </div>
   );
