@@ -8,6 +8,7 @@ import { PossibleDiagnoses } from '../schema';
 import { parsePossibleDiagnoses } from './utils';
 import { Alert } from '@/app//components/Alert';
 import SetupDifficulty from './components/SetupDifficulty';
+import SetupModel from './components/SetupModel';
 
 export default function Setup() {
   const router = useRouter();
@@ -17,6 +18,8 @@ export default function Setup() {
     {},
   );
   const [difficulty, setDifficulty] = useState<string>('3');
+  const [model, setModel] = useState<string>('gpt-4o-mini');
+  const [modality, setModality] = useState<string>('ttt');
 
   useEffect(() => {
     const possibleDiagnosesValue =
@@ -26,6 +29,10 @@ export default function Setup() {
     else setPossibleDiagnoses(parsePossibleDiagnoses());
 
     setDifficulty(localStorage.getItem('difficulty') || '3');
+
+    setModel(localStorage.getItem('model') || 'gpt-4o-mini');
+
+    setModality(localStorage.getItem('modality') || 'ttt');
   }, []);
 
   useEffect(() => setShowDiagnosesAlert(false), [possibleDiagnoses]);
@@ -40,6 +47,8 @@ export default function Setup() {
     );
 
     localStorage.setItem('difficulty', difficulty);
+
+    localStorage.setItem('model', model);
 
     // Go to chat interface
     router.push('/chat');
@@ -64,6 +73,7 @@ export default function Setup() {
 
       {/* CONFIGURATIONS */}
       <div className="flex flex-col gap-12">
+        {/* SCENARIO RELATED */}
         <div className="flex gap-12 flex-col lg:flex-row">
           <SetupDiagnoses
             possibleDiagnoses={possibleDiagnoses}
@@ -74,7 +84,12 @@ export default function Setup() {
             setDifficulty={setDifficulty}
           />
         </div>
-        <SetupModality />
+
+        {/* MODEL RELATED */}
+        <div className="flex gap-12 flex-col lg:flex-row">
+          <SetupModel model={model} setModel={setModel} />
+          <SetupModality modality={modality} setModality={setModality} />
+        </div>
       </div>
 
       {/* ACTION BUTTON */}

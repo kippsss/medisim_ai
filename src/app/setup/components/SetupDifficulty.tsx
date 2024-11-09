@@ -1,6 +1,6 @@
 'use client';
 
-import { DIFFICULTY_HEADER, DIFFICULTY_DESCRIPTIONS } from '../constants';
+import { DIFFICULTY_HEADER, DIFFICULTY_LEVEL_LABELS } from '../constants';
 
 interface Props {
   difficulty: string;
@@ -33,7 +33,7 @@ export default function SetupDifficulty({ difficulty, setDifficulty }: Props) {
           />
         </div>
         <div className="flex w-full justify-between">
-          {DIFFICULTY_DESCRIPTIONS.map((difficultyDescription, index) => (
+          {DIFFICULTY_LEVEL_LABELS.map((difficultyDescription, index) => (
             <div key={index} className="flex flex-col items-center gap-2">
               <span>|</span>
               <span>{difficultyDescription}</span>
