@@ -9,7 +9,6 @@ import { parsePossibleDiagnoses } from '../setup/utils';
 import { PossibleDiagnoses } from '../schema';
 
 export default function Chat() {
-  const [alert, setAlert] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
   const [loading, setLoading] = useState(false);

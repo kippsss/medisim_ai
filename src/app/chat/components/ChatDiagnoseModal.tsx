@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { parsePossibleDiagnoses } from '@/app/setup/utils';
 import { PossibleDiagnoses } from '@/app/schema';
 import { selectRandomDiagnosis } from '../../utils';
+import { Alert } from '@/app/components/Alert';
 
 interface Props {
   startScenario: () => void;
@@ -14,6 +15,7 @@ interface Props {
 export default function ChatDiagnoseModal({ startScenario }: Props) {
   const router = useRouter();
 
+  const [alertMessage, setAlertMessage] = useState('');
   const [correct, setCorrect] = useState(false);
   const [trueDiagnosis, setTrueDiagnosis] = useState<string>('');
   const [possibleDiagnoses, setPossibleDiagnoses] = useState<PossibleDiagnoses>(
@@ -47,10 +49,12 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
     }
   };
 
-  const checkAnswer = (selectedDiagnosis: string, actualDiagnosis: string) => {
-    if (selectedDiagnosis == actualDiagnosis) {
+  const checkAnswer = (selectedDiagnosis: string) => {
+    if (selectedDiagnosis == trueDiagnosis) {
+      setAlertMessage('');
       setCorrect(true);
     } else {
+      setAlertMessage(`${selectedDiagnosis} is incorrect. Please try again.`);
       setCorrect(false);
     }
   };
@@ -90,10 +94,7 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
               {Object.entries(possibleDiagnoses).map(
                 ([diagnosis, isSelectable], index) =>
                   isSelectable && (
-                    <li
-                      key={index}
-                      onClick={() => checkAnswer(diagnosis, trueDiagnosis)}
-                    >
+                    <li key={index} onClick={() => checkAnswer(diagnosis)}>
                       <label className="label cursor-pointer">
                         <span className="label-text">{diagnosis}</span>
                       </label>
@@ -126,6 +127,11 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
                 </div>
               )}
             </form>
+          </div>
+          <div className="mt-8">
+            {alertMessage !== '' && (
+              <Alert type="error" message={alertMessage} />
+            )}
           </div>
         </div>
       </dialog>
