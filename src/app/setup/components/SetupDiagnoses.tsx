@@ -1,29 +1,40 @@
 'use client';
 
-import { useDiagnoses } from '@/app/contexts/DiagnosesContext';
 import { DIAGNOSES_TEXT } from '../constants';
 import { useState } from 'react';
+import { PossibleDiagnoses } from '@/app/schema';
 
-export default function SetupDiagnoses() {
+interface Props {
+  possibleDiagnoses: PossibleDiagnoses;
+  setPossibleDiagnoses: (value: PossibleDiagnoses) => void;
+}
+
+export default function SetupDiagnoses({
+  possibleDiagnoses,
+  setPossibleDiagnoses,
+}: Props) {
   const [selectAll, setSelectAll] = useState(true);
-
-  const { diagnoses, setDiagnoses } = useDiagnoses();
+  console.log('possibleDiagnoses', possibleDiagnoses);
+  console.log('Type of possibleDiagnoses:', typeof possibleDiagnoses);
 
   const toggleSelectAll = () => {
     const newSelectAll = !selectAll;
     setSelectAll(newSelectAll);
 
-    const updatedDiagnoses = Object.keys(diagnoses).reduce((acc, diagnosis) => {
-      acc[diagnosis] = newSelectAll;
-      return acc;
-    }, {} as { [key: string]: boolean });
+    const updatedDiagnoses = Object.keys(possibleDiagnoses).reduce(
+      (acc, diagnosis) => {
+        acc[diagnosis] = newSelectAll;
+        return acc;
+      },
+      {} as PossibleDiagnoses,
+    );
 
-    setDiagnoses(updatedDiagnoses);
+    setPossibleDiagnoses(updatedDiagnoses);
   };
 
   const toggleDiagnosisSelect = (diagnosis: string) => {
-    const isChecked = !diagnoses[diagnosis];
-    setDiagnoses({ ...diagnoses, [diagnosis]: isChecked });
+    const isChecked = !possibleDiagnoses[diagnosis];
+    setPossibleDiagnoses({ ...possibleDiagnoses, [diagnosis]: isChecked });
   };
 
   return (
@@ -42,19 +53,21 @@ export default function SetupDiagnoses() {
       {/* BODY */}
       <div>
         <ul className="menu bg-base-200 rounded-box w-full max-h-64 overflow-y-auto flex-nowrap">
-          {Object.keys(diagnoses).map((diagnosis, index) => (
-            <li key={index}>
-              <label className="label cursor-pointer">
-                <span className="label-text">{diagnosis}</span>
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  checked={diagnoses[diagnosis]}
-                  onChange={() => toggleDiagnosisSelect(diagnosis)}
-                />
-              </label>
-            </li>
-          ))}
+          {Object.entries(possibleDiagnoses).map(
+            ([diagnosis, isChecked], index) => (
+              <li key={index}>
+                <label className="label cursor-pointer">
+                  <span className="label-text">{diagnosis}</span>
+                  <input
+                    type="checkbox"
+                    className="checkbox"
+                    checked={isChecked}
+                    onChange={() => toggleDiagnosisSelect(diagnosis)}
+                  />
+                </label>
+              </li>
+            ),
+          )}
         </ul>
       </div>
     </div>

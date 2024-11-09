@@ -4,19 +4,27 @@ import ChatInput from './components/ChatInput';
 import { useEffect, useState } from 'react';
 import { Message } from './schema';
 import { SYSTEM_CONTENT, STARTING_USER_MESSAGE } from './constants';
-import { useDiagnoses } from '../contexts/DiagnosesContext';
 import ChatDiagnoseModal from './components/ChatDiagnoseModal';
+import { parsePossibleDiagnoses } from '../setup/utils';
+import { PossibleDiagnoses } from '../schema';
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [actualDiagnosis, setActualDiagnosis] = useState<string>('');
+  const [possibleDiagnoses, setPossibleDiagnoses] = useState<PossibleDiagnoses>(
+    {},
+  );
 
   // // For POC, we set modality to be text-to-text (ttt) only
   // const modality = 'ttt';
 
-  const { diagnoses } = useDiagnoses();
+  useEffect(() => {
+    const value = localStorage.getItem('possibleDiagnoses') || undefined;
+    if (value) setPossibleDiagnoses(JSON.parse(value));
+    else setPossibleDiagnoses(parsePossibleDiagnoses());
+  }, []);
 
   useEffect(() => {
     if (
@@ -29,14 +37,16 @@ export default function Chat() {
 
   useEffect(() => {
     startScenario();
-  }, []);
+  }, [possibleDiagnoses]);
 
   const startScenario = () => {
-    const possibleDiagnoses = Object.keys(diagnoses).filter(
-      (key) => diagnoses[key],
+    const possibleDiagnosesToSelect = Object.keys(possibleDiagnoses).filter(
+      (key) => possibleDiagnoses[key],
     );
     const randomDiagnosis =
-      possibleDiagnoses[Math.floor(Math.random() * possibleDiagnoses.length)];
+      possibleDiagnosesToSelect[
+        Math.floor(Math.random() * possibleDiagnosesToSelect.length)
+      ];
     setActualDiagnosis(randomDiagnosis);
     const systemContent = SYSTEM_CONTENT + randomDiagnosis;
     setMessages([

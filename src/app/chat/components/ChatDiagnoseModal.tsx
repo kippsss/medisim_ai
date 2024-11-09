@@ -1,9 +1,10 @@
 'use client';
-import { useState } from 'react';
-import { useDiagnoses } from '../../contexts/DiagnosesContext';
+import { useEffect, useState } from 'react';
 
 import { DIAGNOSE_SELECTION_TITLE, DIAGNOSE_CORRECT_TEXT } from '../constants';
 import { useRouter } from 'next/navigation';
+import { parsePossibleDiagnoses } from '@/app/setup/utils';
+import { PossibleDiagnoses } from '@/app/schema';
 
 interface Props {
   actualDiagnosis: string;
@@ -14,10 +15,18 @@ export default function ChatDiagnoseModal({
   actualDiagnosis,
   startScenario,
 }: Props) {
-  const [correct, setCorrect] = useState(false);
-
   const router = useRouter();
-  const { diagnoses } = useDiagnoses();
+
+  const [correct, setCorrect] = useState(false);
+  const [possibleDiagnoses, setPossibleDiagnoses] = useState<PossibleDiagnoses>(
+    {},
+  );
+
+  useEffect(() => {
+    const value = localStorage.getItem('possibleDiagnoses') || undefined;
+    if (value) setPossibleDiagnoses(JSON.parse(value));
+    else setPossibleDiagnoses(parsePossibleDiagnoses());
+  }, []);
 
   const toggleModal = (action: 'open' | 'close') => {
     const modal = document.getElementById('diagnose-modal');
@@ -61,7 +70,7 @@ export default function ChatDiagnoseModal({
           {/* MODAL BODY */}
           {!correct ? (
             <ul className="mt-4 menu bg-base-200 rounded-box w-full max-h-96 overflow-y-auto flex-nowrap">
-              {Object.entries(diagnoses).map(
+              {Object.entries(possibleDiagnoses).map(
                 ([diagnosis, isSelectable], index) =>
                   isSelectable && (
                     <li
