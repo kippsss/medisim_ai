@@ -10,6 +10,7 @@ import { parsePossibleDiagnoses } from './utils';
 export default function Setup() {
   const router = useRouter();
 
+  const [showErrerAlert, setShowErrorAlert] = useState(false);
   const [possibleDiagnoses, setPossibleDiagnoses] = useState<PossibleDiagnoses>(
     {},
   );
@@ -20,7 +21,11 @@ export default function Setup() {
     else setPossibleDiagnoses(parsePossibleDiagnoses());
   }, []);
 
+  useEffect(() => setShowErrorAlert(false), [possibleDiagnoses]);
+
   const goToChat = () => {
+    if (Object.values(possibleDiagnoses).every((value) => value === false))
+      return setShowErrorAlert(true);
     localStorage.setItem(
       'possibleDiagnoses',
       JSON.stringify(possibleDiagnoses),
@@ -31,6 +36,11 @@ export default function Setup() {
   return (
     <div className="flex flex-col gap-12 px-40 py-20 justify-center">
       {/* HEADER */}
+      {showErrerAlert && (
+        <div role="alert" className="alert alert-warning">
+          You must select at least one possible diagnosis
+        </div>
+      )}
       <div>
         <h1 className="text-5xl font-bold">{TITLE}</h1>
       </div>
