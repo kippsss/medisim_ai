@@ -14,8 +14,6 @@ export default function SetupDiagnoses({
   setPossibleDiagnoses,
 }: Props) {
   const [selectAll, setSelectAll] = useState(true);
-  console.log('possibleDiagnoses', possibleDiagnoses);
-  console.log('Type of possibleDiagnoses:', typeof possibleDiagnoses);
 
   const toggleSelectAll = () => {
     const newSelectAll = !selectAll;
