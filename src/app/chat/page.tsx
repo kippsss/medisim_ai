@@ -35,6 +35,8 @@ export default function Chat() {
   }, [messages]);
 
   useEffect(() => {
+    console.log('this use effect for possible diagnosis ran');
+    console.log('possibleDiagnoses', possibleDiagnoses);
     startScenario();
   }, [possibleDiagnoses]);
 

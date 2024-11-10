@@ -32,9 +32,7 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
     const trueDiagnosisFromLocal =
       localStorage.getItem('trueDiagnosis') || undefined;
 
-    console.log('trueDiagnosisFromLocal', trueDiagnosisFromLocal);
     if (trueDiagnosisFromLocal) {
-      console.log('trueDiagnosisFromLocal', trueDiagnosisFromLocal);
       setTrueDiagnosis(trueDiagnosisFromLocal);
     }
   }, []);
