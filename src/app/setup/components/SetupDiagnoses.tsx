@@ -14,7 +14,7 @@ export default function SetupDiagnoses({
   setPossibleDiagnoses,
 }: Props) {
   const [selectAll, setSelectAll] = useState(true);
-  const [search, setSearch] = useState('cold');
+  const [search, setSearch] = useState('');
 
   const toggleSelectAll = () => {
     const newSelectAll = !selectAll;
