@@ -14,6 +14,7 @@ export default function SetupDiagnoses({
   setPossibleDiagnoses,
 }: Props) {
   const [selectAll, setSelectAll] = useState(true);
+  const [search, setSearch] = useState('');
 
   const toggleSelectAll = () => {
     const newSelectAll = !selectAll;
@@ -51,6 +52,12 @@ export default function SetupDiagnoses({
       {/* BODY */}
       <div>
         <ul className="menu bg-base-200 rounded-box w-full max-h-64 overflow-y-auto flex-nowrap">
+          <input
+            type="text"
+            placeholder="Search"
+            value={search}
+            className="input w-full max-w-md my-2"
+          />
           {Object.entries(possibleDiagnoses).map(
             ([diagnosis, isChecked], index) => (
               <li key={index}>
