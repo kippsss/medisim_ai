@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { SELECT_MODALITY_HEADER } from '../constants';
 import { MODALITIES } from '../constants';
 
