@@ -5,8 +5,6 @@ import { useEffect, useState } from 'react';
 import { Message } from './schema';
 import { SYSTEM_CONTENT, STARTING_USER_MESSAGE } from './constants';
 import ChatDiagnoseModal from './components/ChatDiagnoseModal';
-import { parsePossibleDiagnoses } from '../setup/utils';
-import { PossibleDiagnoses } from '../schema';
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
