@@ -62,22 +62,20 @@ export default function SetupDiagnoses({
             />
           </div>
           {Object.entries(possibleDiagnoses).map(
-            ([diagnosis, isChecked], index) => {
-              if (diagnosis.toLowerCase().includes(search.toLowerCase()))
-                return (
-                  <li key={index}>
-                    <label className="label cursor-pointer">
-                      <span className="label-text">{diagnosis}</span>
-                      <input
-                        type="checkbox"
-                        className="checkbox"
-                        checked={isChecked}
-                        onChange={() => toggleDiagnosisSelect(diagnosis)}
-                      />
-                    </label>
-                  </li>
-                );
-            },
+            ([diagnosis, isChecked], index) =>
+              diagnosis.toLowerCase().includes(search.toLowerCase()) ? (
+                <li key={index}>
+                  <label className="label cursor-pointer">
+                    <span className="label-text">{diagnosis}</span>
+                    <input
+                      type="checkbox"
+                      className="checkbox"
+                      checked={isChecked}
+                      onChange={() => toggleDiagnosisSelect(diagnosis)}
+                    />
+                  </label>
+                </li>
+              ) : undefined,
           )}
         </ul>
       </div>

@@ -16,6 +16,7 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
   const router = useRouter();
 
   const [alertMessage, setAlertMessage] = useState('');
+  const [search, setSearch] = useState('');
   const [correct, setCorrect] = useState(false);
   const [trueDiagnosis, setTrueDiagnosis] = useState<string>('');
   const [possibleDiagnoses, setPossibleDiagnoses] = useState<PossibleDiagnoses>(
@@ -91,9 +92,19 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
           {/* MODAL BODY */}
           {!correct ? (
             <ul className="mt-4 menu bg-base-200 rounded-box w-full max-h-96 overflow-y-auto flex-nowrap">
+              <div className="flex justify-between items-center mx-4 my-2 gap-6">
+                <input
+                  type="text"
+                  placeholder="Search"
+                  value={search}
+                  className="input w-full"
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
               {Object.entries(possibleDiagnoses).map(
                 ([diagnosis, isSelectable], index) =>
-                  isSelectable && (
+                  isSelectable &&
+                  diagnosis.toLowerCase().includes(search.toLowerCase()) && (
                     <li key={index} onClick={() => checkAnswer(diagnosis)}>
                       <label className="label cursor-pointer">
                         <span className="label-text">{diagnosis}</span>
