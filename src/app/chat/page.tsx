@@ -12,17 +12,12 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const [possibleDiagnoses, setPossibleDiagnoses] = useState<PossibleDiagnoses>(
-    {},
-  );
 
   // // For POC, we set modality to be text-to-text (ttt) only
   // const modality = 'ttt';
 
   useEffect(() => {
-    const value = localStorage.getItem('possibleDiagnoses') || undefined;
-    if (value) setPossibleDiagnoses(JSON.parse(value));
-    else setPossibleDiagnoses(parsePossibleDiagnoses());
+    startScenario();
   }, []);
 
   useEffect(() => {
@@ -33,12 +28,6 @@ export default function Chat() {
       chatCompletion(messages);
     }
   }, [messages]);
-
-  useEffect(() => {
-    console.log('this use effect for possible diagnosis ran');
-    console.log('possibleDiagnoses', possibleDiagnoses);
-    startScenario();
-  }, [possibleDiagnoses]);
 
   const startScenario = () => {
     const trueDiagnosis = localStorage.getItem('trueDiagnosis') || undefined;
