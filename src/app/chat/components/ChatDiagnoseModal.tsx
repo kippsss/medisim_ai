@@ -55,7 +55,7 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
       setAlertMessage('');
       setCorrect(true);
     } else {
-      setAlertMessage(`${selectedDiagnosis} is incorrect. Please try again.`);
+      setAlertMessage(`${selectedDiagnosis} is incorrect`);
       setCorrect(false);
     }
   };
