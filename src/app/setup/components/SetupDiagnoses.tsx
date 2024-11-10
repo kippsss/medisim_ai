@@ -14,7 +14,7 @@ export default function SetupDiagnoses({
   setPossibleDiagnoses,
 }: Props) {
   const [selectAll, setSelectAll] = useState(true);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState('cold');
 
   const toggleSelectAll = () => {
     const newSelectAll = !selectAll;
@@ -41,37 +41,43 @@ export default function SetupDiagnoses({
       {/* HEADER */}
       <div className="flex flex-row justify-between items-center pl-2 pr-10 py-4">
         <h3 className="font-bold text-2xl">{DIAGNOSES_HEADER}</h3>
-        <input
-          type="checkbox"
-          className="checkbox"
-          checked={selectAll}
-          onChange={toggleSelectAll}
-        />
       </div>
 
       {/* BODY */}
       <div>
         <ul className="menu bg-base-200 rounded-box w-full max-h-64 overflow-y-auto flex-nowrap">
-          <input
-            type="text"
-            placeholder="Search"
-            value={search}
-            className="input w-full max-w-md my-2"
-          />
+          <div className="flex justify-between items-center mx-4 my-2 gap-6">
+            <input
+              type="text"
+              placeholder="Search"
+              value={search}
+              className="input w-full"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={selectAll}
+              onChange={toggleSelectAll}
+            />
+          </div>
           {Object.entries(possibleDiagnoses).map(
-            ([diagnosis, isChecked], index) => (
-              <li key={index}>
-                <label className="label cursor-pointer">
-                  <span className="label-text">{diagnosis}</span>
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    checked={isChecked}
-                    onChange={() => toggleDiagnosisSelect(diagnosis)}
-                  />
-                </label>
-              </li>
-            ),
+            ([diagnosis, isChecked], index) => {
+              if (diagnosis.toLowerCase().includes(search.toLowerCase()))
+                return (
+                  <li key={index}>
+                    <label className="label cursor-pointer">
+                      <span className="label-text">{diagnosis}</span>
+                      <input
+                        type="checkbox"
+                        className="checkbox"
+                        checked={isChecked}
+                        onChange={() => toggleDiagnosisSelect(diagnosis)}
+                      />
+                    </label>
+                  </li>
+                );
+            },
           )}
         </ul>
       </div>
