@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { PossibleDiagnoses } from '../schema';
 import { parsePossibleDiagnoses } from './utils';
 import { Alert } from '@/app//components/Alert';
-import SetupDifficulty from './components/SetupDifficulty';
+// import SetupDifficulty from './components/SetupDifficulty';
 import SetupModel from './components/SetupModel';
 import { selectRandomDiagnosis } from '../utils';
 import { DefaultPageContainer } from '../components/DefaultPageContainer';

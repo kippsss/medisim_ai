@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 
-import { DIAGNOSE_SELECTION_TITLE, DIAGNOSE_CORRECT_TEXT } from '../constants';
+import { DIAGNOSE_CORRECT_TEXT } from '../constants';
 import { useRouter } from 'next/navigation';
 import { parsePossibleDiagnoses } from '@/app/setup/utils';
 import { PossibleDiagnoses } from '@/app/schema';
