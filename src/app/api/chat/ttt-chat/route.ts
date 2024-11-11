@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini',
       messages: messages,
     });
     return NextResponse.json({
