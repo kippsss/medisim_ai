@@ -75,6 +75,11 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
     toggleModal('close');
   };
 
+  const resetStates = () => {
+    setAlertMessage('');
+    setSearch('');
+  };
+
   return (
     <>
       <button className="btn btn-primary" onClick={() => toggleModal('open')}>
@@ -91,7 +96,7 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
             {/* if there is a button in form, it will close the modal */}
             <button
               className="btn btn-lg btn-circle btn-ghost absolute right-0 top-0"
-              onClick={() => setAlertMessage('')}
+              onClick={resetStates}
             >
               ✕
             </button>
