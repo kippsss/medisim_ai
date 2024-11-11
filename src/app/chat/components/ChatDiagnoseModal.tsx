@@ -81,11 +81,21 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
         Diagnose
       </button>
       <dialog id="diagnose-modal" className="modal">
-        <div className="modal-box">
+        <div className="modal-box pt-10">
           {/* MODAL HEADER */}
-          {!correct && (
+          {/* {!correct && (
             <h3 className="font-bold text-lg">{DIAGNOSE_SELECTION_TITLE}</h3>
-          )}
+          )} */}
+
+          <form method="dialog">
+            {/* if there is a button in form, it will close the modal */}
+            <button
+              className="btn btn-lg btn-circle btn-ghost absolute right-0 top-0"
+              onClick={() => setAlertMessage('')}
+            >
+              ✕
+            </button>
+          </form>
 
           {/* MODAL BODY */}
           {!correct ? (
@@ -121,11 +131,15 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
           )}
 
           {/* MODAL FOOTER */}
-          <div className="modal-action mt-16">
-            <form method="dialog">
-              {!correct ? (
-                <button className="btn">Close</button>
-              ) : (
+          {!correct ? (
+            <div className="mt-8">
+              {alertMessage !== '' && (
+                <Alert type="error" message={alertMessage} />
+              )}
+            </div>
+          ) : (
+            <div className="modal-action mt-16">
+              {correct && (
                 <div className="flex gap-4">
                   <button className="btn" onClick={() => router.push('/setup')}>
                     Back to setup
@@ -135,13 +149,8 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
                   </button>
                 </div>
               )}
-            </form>
-          </div>
-          <div className="mt-8">
-            {alertMessage !== '' && (
-              <Alert type="error" message={alertMessage} />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </dialog>
     </>
