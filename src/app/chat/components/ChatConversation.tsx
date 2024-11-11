@@ -9,7 +9,7 @@ interface Props {
 
 export default function ChatConversation({ messages, loading }: Props) {
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 overflow-y-auto">
       {messages.map((message, index) => {
         if (message.role === 'system') {
           return null; // Skip rendering if the role is 'system'

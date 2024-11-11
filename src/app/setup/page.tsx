@@ -10,6 +10,7 @@ import { Alert } from '@/app//components/Alert';
 import SetupDifficulty from './components/SetupDifficulty';
 import SetupModel from './components/SetupModel';
 import { selectRandomDiagnosis } from '../utils';
+import { DefaultPageContainer } from '../components/DefaultPageContainer';
 
 export default function Setup() {
   const router = useRouter();
@@ -65,7 +66,7 @@ export default function Setup() {
   };
 
   return (
-    <div className="flex flex-col gap-12 px-40 py-20 justify-center">
+    <DefaultPageContainer>
       {/* ALERTS */}
       <div>
         {showDiagnosesAlert && (
@@ -77,7 +78,7 @@ export default function Setup() {
       </div>
 
       {/* HEADER */}
-      <div>
+      <div className="mb-10">
         <h1 className="text-5xl font-bold">{TITLE}</h1>
       </div>
 
@@ -103,11 +104,11 @@ export default function Setup() {
       </div>
 
       {/* ACTION BUTTON */}
-      <div className="mt-20">
+      <div className="mt-20 w-full">
         <button className="btn btn-neutral w-full" onClick={goToChat}>
           {BUTTON_TEXT}
         </button>
       </div>
-    </div>
+    </DefaultPageContainer>
   );
 }

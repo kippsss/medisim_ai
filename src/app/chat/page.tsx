@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Message } from './schema';
 import { SYSTEM_CONTENT, STARTING_USER_MESSAGE } from './constants';
 import ChatDiagnoseModal from './components/ChatDiagnoseModal';
+import { DefaultPageContainer } from '../components/DefaultPageContainer';
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -86,10 +87,9 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex flex-col w-full px-40 py-20 min-h-screen justify-between">
+    <DefaultPageContainer classes="justify-between h-screen overflow-y-hidden gap-10">
       {/* CONVERSATION */}
       <ChatConversation messages={messages} loading={loading} />
-
       {/* TEXT INPUT AND ACTION BUTTONS */}
       <div className="flex flex-row gap-4">
         <ChatInput
@@ -100,6 +100,6 @@ export default function Chat() {
         />
         <ChatDiagnoseModal startScenario={startScenario} />
       </div>
-    </div>
+    </DefaultPageContainer>
   );
 }
