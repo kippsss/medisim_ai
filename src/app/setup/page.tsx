@@ -90,10 +90,10 @@ export default function Setup() {
             possibleDiagnoses={possibleDiagnoses}
             setPossibleDiagnoses={setPossibleDiagnoses}
           />
-          <SetupDifficulty
+          {/* <SetupDifficulty
             difficulty={difficulty}
             setDifficulty={setDifficulty}
-          />
+          /> */}
         </div>
 
         {/* MODEL RELATED */}
