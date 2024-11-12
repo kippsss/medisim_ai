@@ -91,7 +91,7 @@ export default function Chat() {
       {/* CONVERSATION */}
       <ChatConversation messages={messages} loading={loading} />
       {/* TEXT INPUT AND ACTION BUTTONS */}
-      <div className="flex flex-row gap-4">
+      <div className="flex flex-col gap-2 sm:gap-4">
         <ChatInput
           input={input}
           handleInputChange={handleInputChange}
