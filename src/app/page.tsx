@@ -2,9 +2,22 @@
 import { useRouter } from 'next/navigation';
 import { TITLE, SUBTITLE, BUTTON_TEXT } from './constants';
 import { DefaultPageContainer } from './components/DefaultPageContainer';
+import { useEffect } from 'react';
 
 export default function Home() {
   const router = useRouter();
+
+  useEffect(() => {
+    const latestVersion = process.env.NEXT_PUBLIC_VERSION;
+    const currentVersion = localStorage.getItem('version') || undefined;
+    if (!latestVersion || !currentVersion || latestVersion !== currentVersion) {
+      localStorage.clear();
+      localStorage.setItem(
+        'version',
+        latestVersion === undefined ? 'VERSION_NOT_FOUND' : latestVersion,
+      );
+    }
+  }, []);
 
   const goToSetup = () => {
     router.push('/setup');
