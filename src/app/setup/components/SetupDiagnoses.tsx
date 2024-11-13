@@ -45,22 +45,23 @@ export default function SetupDiagnoses({
 
       {/* BODY */}
       <div>
+        <div className="flex justify-between items-center ml-1 mr-6 my-2 gap-6">
+          <input
+            type="text"
+            placeholder="Search"
+            value={search}
+            className="input input-bordered w-full"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <input
+            type="checkbox"
+            className="checkbox"
+            checked={selectAll}
+            onChange={toggleSelectAll}
+          />
+        </div>
+
         <ul className="menu bg-base-200 rounded-box w-full max-h-64 overflow-y-auto flex-nowrap">
-          <div className="flex justify-between items-center mx-4 my-2 gap-6">
-            <input
-              type="text"
-              placeholder="Search"
-              value={search}
-              className="input w-full"
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <input
-              type="checkbox"
-              className="checkbox"
-              checked={selectAll}
-              onChange={toggleSelectAll}
-            />
-          </div>
           {Object.entries(possibleDiagnoses).map(
             ([diagnosis, isChecked], index) =>
               diagnosis.toLowerCase().includes(search.toLowerCase()) ? (
