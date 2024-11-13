@@ -86,7 +86,7 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
         Diagnose
       </button>
       <dialog id="diagnose-modal" className="modal">
-        <div className="modal-box pt-10">
+        <div className="modal-box px-10 pt-16 pb-8">
           {/* MODAL HEADER */}
           {/* {!correct && (
             <h3 className="font-bold text-lg">{DIAGNOSE_SELECTION_TITLE}</h3>
@@ -95,7 +95,7 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
           <form method="dialog">
             {/* if there is a button in form, it will close the modal */}
             <button
-              className="btn btn-lg btn-circle btn-ghost absolute right-0 top-0"
+              className="btn btn-lg btn-circle btn-ghost absolute right-2 top-2"
               onClick={resetStates}
             >
               ✕
@@ -104,28 +104,30 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
 
           {/* MODAL BODY */}
           {!correct ? (
-            <ul className="mt-4 menu bg-base-200 rounded-box w-full max-h-96 overflow-y-auto flex-nowrap">
-              <div className="flex justify-between items-center mx-4 my-2 gap-6">
+            <>
+              <div className="flex justify-between items-center mx-1 my-2 gap-6">
                 <input
                   type="text"
                   placeholder="Search"
                   value={search}
-                  className="input w-full"
+                  className="input input-bordered w-full"
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
-              {Object.entries(possibleDiagnoses).map(
-                ([diagnosis, isSelectable], index) =>
-                  isSelectable &&
-                  diagnosis.toLowerCase().includes(search.toLowerCase()) && (
-                    <li key={index} onClick={() => checkAnswer(diagnosis)}>
-                      <label className="label cursor-pointer">
-                        <span className="label-text">{diagnosis}</span>
-                      </label>
-                    </li>
-                  ),
-              )}
-            </ul>
+              <ul className="mt-4 menu bg-base-200 rounded-box w-full max-h-96 overflow-y-auto flex-nowrap">
+                {Object.entries(possibleDiagnoses).map(
+                  ([diagnosis, isSelectable], index) =>
+                    isSelectable &&
+                    diagnosis.toLowerCase().includes(search.toLowerCase()) && (
+                      <li key={index} onClick={() => checkAnswer(diagnosis)}>
+                        <label className="label cursor-pointer">
+                          <span className="label-text">{diagnosis}</span>
+                        </label>
+                      </li>
+                    ),
+                )}
+              </ul>
+            </>
           ) : (
             <div className="flex flex-col gap-8">
               <h3 className="text-2xl">{DIAGNOSE_CORRECT_TEXT}</h3>
