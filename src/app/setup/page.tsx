@@ -2,13 +2,13 @@
 import { useRouter } from 'next/navigation';
 import { TITLE, BUTTON_TEXT } from './constants';
 import SetupDiagnoses from './components/SetupDiagnoses';
-import SetupModality from './components/SetupModality';
+// import SetupModality from './components/SetupModality';
 import { useEffect, useState } from 'react';
 import { PossibleDiagnoses } from '../schema';
 import { parsePossibleDiagnoses } from './utils';
 import { Alert } from '@/app//components/Alert';
 // import SetupDifficulty from './components/SetupDifficulty';
-import SetupModel from './components/SetupModel';
+// import SetupModel from './components/SetupModel';
 import { selectRandomDiagnosis } from '../utils';
 import { DefaultPageContainer } from '../components/DefaultPageContainer';
 
