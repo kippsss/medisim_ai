@@ -97,10 +97,10 @@ export default function Setup() {
         </div>
 
         {/* MODEL RELATED */}
-        <div className="flex gap-12 flex-col lg:flex-row">
+        {/* <div className="flex gap-12 flex-col lg:flex-row">
           <SetupModel model={model} setModel={setModel} />
           <SetupModality modality={modality} setModality={setModality} />
-        </div>
+        </div> */}
       </div>
 
       {/* ACTION BUTTON */}
