@@ -88,7 +88,6 @@ export default function Chat() {
       addMessage(input);
       setInput('');
     }
-    addMessage(input);
   };
 
   return (
