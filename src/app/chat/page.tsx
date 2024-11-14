@@ -3,7 +3,12 @@ import ChatConversation from './components/ChatConversation';
 import ChatInput from './components/ChatInput';
 import { useEffect, useState } from 'react';
 import { Message } from './schema';
-import { SYSTEM_CONTENT, STARTING_USER_MESSAGE } from './constants';
+import {
+  SYSTEM_PROMPT_PERSONA,
+  SYSTEM_PROMPT_INSTRUCTIONS,
+  SYSTEM_PROMPT_DIAGNOSES,
+  STARTING_USER_MESSAGE,
+} from './constants';
 import ChatDiagnoseModal from './components/ChatDiagnoseModal';
 import { DefaultPageContainer } from '../components/DefaultPageContainer';
 
@@ -33,9 +38,9 @@ export default function Chat() {
     console.log(trueDiagnosis);
     if (!trueDiagnosis) return;
 
-    const systemContent = SYSTEM_CONTENT + trueDiagnosis;
+    const systemPrompt = `${SYSTEM_PROMPT_PERSONA}${SYSTEM_PROMPT_INSTRUCTIONS}${SYSTEM_PROMPT_DIAGNOSES}${trueDiagnosis}`;
     setMessages([
-      { role: 'system', content: systemContent },
+      { role: 'system', content: systemPrompt },
       STARTING_USER_MESSAGE,
     ]);
   };
