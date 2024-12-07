@@ -1,3 +1,5 @@
 export interface PossibleDiagnoses {
-  [key: string]: boolean;
+  [system: string]: {
+    [diagnosis: string]: boolean;
+  };
 }

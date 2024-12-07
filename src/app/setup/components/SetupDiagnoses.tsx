@@ -61,7 +61,38 @@ export default function SetupDiagnoses({
           />
         </div>
 
-        <ul className="menu bg-base-200 rounded-box w-full max-h-64 overflow-y-auto flex-nowrap">
+        <ul className="menu bg-base-200 rounded-box">
+          <li>
+            <a>Item 1</a>
+          </li>
+          <li>
+            <a>Parent</a>
+            <ul>
+              <li>
+                <a>Submenu 1</a>
+              </li>
+              <li>
+                <a>Submenu 2</a>
+              </li>
+              <li>
+                <a>Parent</a>
+                <ul>
+                  <li>
+                    <a>Submenu 1</a>
+                  </li>
+                  <li>
+                    <a>Submenu 2</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a>Item 3</a>
+          </li>
+        </ul>
+
+        {/* <ul className="menu bg-base-200 rounded-box w-full max-h-64 overflow-y-auto flex-nowrap">
           {Object.entries(possibleDiagnoses).map(
             ([diagnosis, isChecked], index) =>
               diagnosis.toLowerCase().includes(search.toLowerCase()) ? (
@@ -78,7 +109,7 @@ export default function SetupDiagnoses({
                 </li>
               ) : undefined,
           )}
-        </ul>
+        </ul> */}
       </div>
     </div>
   );
