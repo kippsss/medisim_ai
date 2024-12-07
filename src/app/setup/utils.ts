@@ -1,11 +1,16 @@
 import { PossibleDiagnoses } from '../schema';
 
-export const parsePossibleDiagnoses = () => {
-  const possibleDiagnosesString = process.env.NEXT_PUBLIC_DIAGNOSES || '';
-  const possibleDiagnosesArray = possibleDiagnosesString.split(',');
+export const parsePossibleDiagnoses = (): PossibleDiagnoses => {
+  const possibleDiagnoses = JSON.parse(
+    process.env.NEXT_PUBLIC_DIAGNOSES || '{}',
+  );
+  const parsedDiagnoses: { [key: string]: { [key: string]: boolean } } = {};
 
-  return possibleDiagnosesArray.reduce((acc, diagnosis) => {
-    acc[diagnosis] = true;
-    return acc;
-  }, {} as PossibleDiagnoses);
+  for (const system in possibleDiagnoses) {
+    parsedDiagnoses[system] = {};
+    possibleDiagnoses[system].forEach((diagnosis: string) => {
+      parsedDiagnoses[system][diagnosis] = true;
+    });
+  }
+  return parsedDiagnoses;
 };
