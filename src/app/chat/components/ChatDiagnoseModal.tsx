@@ -61,15 +61,19 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
   const nextScenario = () => {
     setCorrect(false);
 
-    // Select a random true diagnosis
-    const randomDiagnosis = selectRandomDiagnosis(
-      Object.keys(possibleDiagnoses).filter(
-        (key) => possibleDiagnoses[key] === true,
-      ),
+    // Flatten the possibleDiagnoses object to get an array of selected diagnoses
+    const selectedDiagnoses = Object.entries(possibleDiagnoses).flatMap(
+      ([_, diagnoses]) =>
+        Object.entries(diagnoses)
+          .filter(([_, value]) => value)
+          .map(([diagnosis]) => diagnosis),
     );
-    localStorage.setItem('trueDiagnosis', randomDiagnosis);
+
+    // Select a random true diagnosis
+    const trueDiagnosis = selectRandomDiagnosis(selectedDiagnoses);
+    localStorage.setItem('trueDiagnosis', trueDiagnosis);
     // Need to set the true diagnosis to the state so that it can be displayed
-    setTrueDiagnosis(randomDiagnosis);
+    setTrueDiagnosis(trueDiagnosis);
 
     startScenario();
     toggleModal('close');
@@ -105,7 +109,7 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
           {/* MODAL BODY */}
           {!correct ? (
             <>
-              <div className="flex justify-between items-center mx-1 my-2 gap-6">
+              {/* <div className="flex justify-between items-center mx-1 my-2 gap-6">
                 <input
                   type="text"
                   placeholder="Search"
@@ -113,8 +117,8 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
                   className="input input-bordered w-full"
                   onChange={(e) => setSearch(e.target.value)}
                 />
-              </div>
-              <ul className="mt-4 menu bg-base-200 rounded-box w-full max-h-96 overflow-y-auto flex-nowrap">
+              </div> */}
+              {/* <ul className="mt-4 menu bg-base-200 rounded-box w-full max-h-96 overflow-y-auto flex-nowrap">
                 {Object.entries(possibleDiagnoses).map(
                   ([diagnosis, isSelectable], index) =>
                     isSelectable &&
@@ -125,6 +129,36 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
                         </label>
                       </li>
                     ),
+                )}
+              </ul> */}
+              <ul className="menu bg-base-200 rounded-box max-h-80 overflow-y-auto flex-nowrap">
+                {Object.entries(possibleDiagnoses).map(
+                  ([system, diagnoses]) => (
+                    <li key={system}>
+                      <details>
+                        <summary className="cursor-pointer font-bold">
+                          {system}
+                        </summary>
+                        <ul>
+                          {Object.entries(diagnoses).map(
+                            ([diagnosis, selected]) =>
+                              selected && (
+                                <li
+                                  key={diagnosis}
+                                  onClick={() => checkAnswer(diagnosis)}
+                                >
+                                  <label className="label cursor-pointer">
+                                    <span className="label-text">
+                                      {diagnosis}
+                                    </span>
+                                  </label>
+                                </li>
+                              ),
+                          )}
+                        </ul>
+                      </details>
+                    </li>
+                  ),
                 )}
               </ul>
             </>

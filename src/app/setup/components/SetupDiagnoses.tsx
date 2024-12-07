@@ -13,27 +13,35 @@ export default function SetupDiagnoses({
   possibleDiagnoses,
   setPossibleDiagnoses,
 }: Props) {
+  console.log('possibleDiagnoses', possibleDiagnoses);
   const [selectAll, setSelectAll] = useState(true);
   const [search, setSearch] = useState('');
 
-  const toggleSelectAll = () => {
-    const newSelectAll = !selectAll;
-    setSelectAll(newSelectAll);
+  // const toggleSelectAll = () => {
+  //   const newSelectAll = !selectAll;
+  //   setSelectAll(newSelectAll);
 
-    const updatedDiagnoses = Object.keys(possibleDiagnoses).reduce(
-      (acc, diagnosis) => {
-        acc[diagnosis] = newSelectAll;
-        return acc;
+  //   const updatedDiagnoses = Object.keys(possibleDiagnoses).reduce(
+  //     (acc, diagnosis) => {
+  //       acc[diagnosis] = newSelectAll;
+  //       return acc;
+  //     },
+  //     {} as PossibleDiagnoses,
+  //   );
+
+  //   setPossibleDiagnoses(updatedDiagnoses);
+  // };
+
+  const toggleDiagnosisSelect = (system: string, diagnosis: string) => {
+    const isChecked = !possibleDiagnoses[system][diagnosis];
+    const newPossibleDiagnoses = {
+      ...possibleDiagnoses,
+      [system]: {
+        ...possibleDiagnoses[system],
+        [diagnosis]: isChecked,
       },
-      {} as PossibleDiagnoses,
-    );
-
-    setPossibleDiagnoses(updatedDiagnoses);
-  };
-
-  const toggleDiagnosisSelect = (diagnosis: string) => {
-    const isChecked = !possibleDiagnoses[diagnosis];
-    setPossibleDiagnoses({ ...possibleDiagnoses, [diagnosis]: isChecked });
+    };
+    setPossibleDiagnoses(newPossibleDiagnoses);
   };
 
   return (
@@ -45,71 +53,41 @@ export default function SetupDiagnoses({
 
       {/* BODY */}
       <div>
-        <div className="flex justify-between items-center ml-1 mr-6 my-2 gap-6">
-          <input
-            type="text"
-            placeholder="Search"
-            value={search}
-            className="input input-bordered w-full"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <input
-            type="checkbox"
-            className="checkbox"
-            checked={selectAll}
-            onChange={toggleSelectAll}
-          />
-        </div>
-
-        <ul className="menu bg-base-200 rounded-box">
-          <li>
-            <a>Item 1</a>
-          </li>
-          <li>
-            <a>Parent</a>
-            <ul>
-              <li>
-                <a>Submenu 1</a>
-              </li>
-              <li>
-                <a>Submenu 2</a>
-              </li>
-              <li>
-                <a>Parent</a>
+        <ul className="menu bg-base-200 rounded-box max-h-80 overflow-y-auto flex-nowrap">
+          {Object.entries(possibleDiagnoses).map(([system, diagnoses]) => (
+            <li key={system}>
+              {/* <label className="label cursor-pointer font-bold">
+                <span className="label-text">{system.toUpperCase()}</span>
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  checked={isChecked}
+                  onChange={() => toggleDiagnosisSelect(diagnosis)}
+                />
+              </label> */}
+              <details>
+                <summary className="cursor-pointer font-bold">{system}</summary>
                 <ul>
-                  <li>
-                    <a>Submenu 1</a>
-                  </li>
-                  <li>
-                    <a>Submenu 2</a>
-                  </li>
+                  {Object.entries(diagnoses).map(([diagnosis, selected]) => (
+                    <li key={diagnosis}>
+                      <label className="label cursor-pointer">
+                        <span className="label-text">{diagnosis}</span>
+                        <input
+                          type="checkbox"
+                          className="checkbox"
+                          checked={selected}
+                          onChange={() =>
+                            toggleDiagnosisSelect(system, diagnosis)
+                          }
+                        />
+                      </label>
+                    </li>
+                  ))}
                 </ul>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a>Item 3</a>
-          </li>
+              </details>
+            </li>
+          ))}
         </ul>
-
-        {/* <ul className="menu bg-base-200 rounded-box w-full max-h-64 overflow-y-auto flex-nowrap">
-          {Object.entries(possibleDiagnoses).map(
-            ([diagnosis, isChecked], index) =>
-              diagnosis.toLowerCase().includes(search.toLowerCase()) ? (
-                <li key={index}>
-                  <label className="label cursor-pointer">
-                    <span className="label-text">{diagnosis}</span>
-                    <input
-                      type="checkbox"
-                      className="checkbox"
-                      checked={isChecked}
-                      onChange={() => toggleDiagnosisSelect(diagnosis)}
-                    />
-                  </label>
-                </li>
-              ) : undefined,
-          )}
-        </ul> */}
       </div>
     </div>
   );

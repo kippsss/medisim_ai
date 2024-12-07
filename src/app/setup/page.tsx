@@ -40,16 +40,21 @@ export default function Setup() {
   useEffect(() => setShowDiagnosesAlert(false), [possibleDiagnoses]);
 
   const goToChat = () => {
+    // Flatten the possibleDiagnoses object to get an array of selected diagnoses
+    const selectedDiagnoses = Object.entries(possibleDiagnoses).flatMap(
+      ([_, diagnoses]) =>
+        Object.entries(diagnoses)
+          .filter(([_, value]) => value)
+          .map(([diagnosis]) => diagnosis),
+    );
+
     // Check if at least one possible diagnosis is selected
-    if (Object.values(possibleDiagnoses).every((value) => value === false))
+    if (selectedDiagnoses.length === 0) {
       return setShowDiagnosesAlert(true);
+    }
 
     // Select a random true diagnosis
-    const trueDiagnosis = selectRandomDiagnosis(
-      Object.keys(possibleDiagnoses).filter(
-        (key) => possibleDiagnoses[key] === true,
-      ),
-    );
+    const trueDiagnosis = selectRandomDiagnosis(selectedDiagnoses);
 
     // Save all configurations to local storage
     localStorage.setItem(
