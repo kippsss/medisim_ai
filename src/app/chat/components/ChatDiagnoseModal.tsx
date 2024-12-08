@@ -93,6 +93,27 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
     setSearch('');
   };
 
+  const getHighlightedText = (text: string, highlight: string) => {
+    // Split on highlight term and include term into parts, ignore case
+    const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+    return (
+      <span>
+        {parts.map((part, i) => (
+          <span
+            key={i}
+            style={
+              part.toLowerCase() === highlight.toLowerCase()
+                ? { backgroundColor: '#ffff66' }
+                : {}
+            }
+          >
+            {part}
+          </span>
+        ))}
+      </span>
+    );
+  };
+
   return (
     <>
       <button className="btn btn-primary" onClick={() => toggleModal('open')}>
@@ -182,7 +203,9 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
                       searchedDiagnoses.map((diagnosis, index) => (
                         <li key={index} onClick={() => checkAnswer(diagnosis)}>
                           <label className="label cursor-pointer">
-                            <span className="label-text">{diagnosis}</span>
+                            <span className="label-text">
+                              {getHighlightedText(diagnosis, search)}
+                            </span>
                           </label>
                         </li>
                       ))
