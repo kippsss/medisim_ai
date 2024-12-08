@@ -225,10 +225,11 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
 
           {/* MODAL FOOTER */}
           {!correct ? (
-            <div className="mt-8">
+            <div className="flex mt-8 gap-4">
               {alertMessage !== '' && (
                 <Alert type="error" message={alertMessage} />
               )}
+              <button className="btn ml-auto">Give up</button>
             </div>
           ) : (
             <div className="modal-action mt-16">
