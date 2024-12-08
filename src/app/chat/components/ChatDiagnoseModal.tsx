@@ -17,7 +17,6 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
 
   const [alertMessage, setAlertMessage] = useState('');
   const [search, setSearch] = useState('');
-  const [correct, setCorrect] = useState(false);
   const [status, setStatus] = useState<'guessing' | 'correct' | 'gaveUp'>(
     'guessing',
   );
