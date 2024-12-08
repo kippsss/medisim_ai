@@ -42,9 +42,9 @@ export default function Setup() {
   const goToChat = () => {
     // Flatten the possibleDiagnoses object to get an array of selected diagnoses
     const selectedDiagnoses = Object.entries(possibleDiagnoses).flatMap(
-      ([_, diagnoses]) =>
+      ([, diagnoses]) =>
         Object.entries(diagnoses)
-          .filter(([_, value]) => value)
+          .filter(([, value]) => value)
           .map(([diagnosis]) => diagnosis),
     );
 
