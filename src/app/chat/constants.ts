@@ -34,4 +34,6 @@ export const READY_BUTTON_TEXT = "I'm ready";
 
 export const DIAGNOSE_SELECTION_TITLE = 'Diagnose me';
 
-export const DIAGNOSE_CORRECT_TEXT = "That's right! I have";
+export const CORRECT_TEXT = "That's right! I have";
+
+export const GAVE_UP_TEXT = 'I have';

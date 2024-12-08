@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 
-import { DIAGNOSE_CORRECT_TEXT } from '../constants';
+import { CORRECT_TEXT, GAVE_UP_TEXT } from '../constants';
 import { useRouter } from 'next/navigation';
 import { parsePossibleDiagnoses } from '@/app/setup/utils';
 import { PossibleDiagnoses } from '@/app/schema';
@@ -18,6 +18,9 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
   const [alertMessage, setAlertMessage] = useState('');
   const [search, setSearch] = useState('');
   const [correct, setCorrect] = useState(false);
+  const [status, setStatus] = useState<'guessing' | 'correct' | 'gaveUp'>(
+    'guessing',
+  );
   const [trueDiagnosis, setTrueDiagnosis] = useState<string>('');
   const [possibleDiagnoses, setPossibleDiagnoses] = useState<PossibleDiagnoses>(
     {},
@@ -68,15 +71,15 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
   const checkAnswer = (selectedDiagnosis: string) => {
     if (selectedDiagnosis == trueDiagnosis) {
       setAlertMessage('');
-      setCorrect(true);
+      setStatus('correct');
     } else {
       setAlertMessage(`${selectedDiagnosis} is incorrect`);
-      setCorrect(false);
+      setStatus('guessing');
     }
   };
 
   const nextScenario = () => {
-    setCorrect(false);
+    setStatus('guessing');
 
     // Select a random true diagnosis
     const trueDiagnosis = selectRandomDiagnosis(selectedDiagnosesFlattened);
@@ -91,6 +94,10 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
   const resetStates = () => {
     setAlertMessage('');
     setSearch('');
+  };
+
+  const giveUp = () => {
+    setStatus('gaveUp');
   };
 
   const getHighlightedText = (text: string, highlight: string) => {
@@ -137,7 +144,7 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
           </form>
 
           {/* MODAL BODY */}
-          {!correct ? (
+          {status === 'guessing' ? (
             <>
               <div className="flex justify-between items-center mx-1 my-2 gap-6">
                 <input
@@ -148,19 +155,6 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
-              {/* <ul className="mt-4 menu bg-base-200 rounded-box w-full max-h-96 overflow-y-auto flex-nowrap">
-                {Object.entries(possibleDiagnoses).map(
-                  ([diagnosis, isSelectable], index) =>
-                    isSelectable &&
-                    diagnosis.toLowerCase().includes(search.toLowerCase()) && (
-                      <li key={index} onClick={() => checkAnswer(diagnosis)}>
-                        <label className="label cursor-pointer">
-                          <span className="label-text">{diagnosis}</span>
-                        </label>
-                      </li>
-                    ),
-                )}
-              </ul> */}
               <ul className="menu bg-base-200 rounded-box max-h-80 overflow-y-auto flex-nowrap">
                 {search === '' ? (
                   // If search is empty, list all possible diagnoses classified by system
@@ -216,7 +210,9 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
             </>
           ) : (
             <div className="flex flex-col gap-8">
-              <h3 className="text-2xl">{DIAGNOSE_CORRECT_TEXT}</h3>
+              <h3 className="text-2xl">
+                {status === 'correct' ? CORRECT_TEXT : GAVE_UP_TEXT}
+              </h3>
               <h1 className="font-bold text-5xl text-center">
                 {trueDiagnosis}
               </h1>
@@ -224,25 +220,23 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
           )}
 
           {/* MODAL FOOTER */}
-          {!correct ? (
+          {status === 'guessing' ? (
             <div className="flex mt-8 gap-4">
               {alertMessage !== '' && (
                 <Alert type="error" message={alertMessage} />
               )}
-              <button className="btn ml-auto">Give up</button>
+              <button className="btn ml-auto" onClick={giveUp}>
+                Give up
+              </button>
             </div>
           ) : (
-            <div className="modal-action mt-16">
-              {correct && (
-                <div className="flex gap-4">
-                  <button className="btn" onClick={() => router.push('/setup')}>
-                    Back to setup
-                  </button>
-                  <button className="btn" onClick={nextScenario}>
-                    Next scenario
-                  </button>
-                </div>
-              )}
+            <div className=" modal-action flex gap-4 mt-16">
+              <button className="btn" onClick={() => router.push('/setup')}>
+                Back to setup
+              </button>
+              <button className="btn" onClick={nextScenario}>
+                Next scenario
+              </button>
             </div>
           )}
         </div>
