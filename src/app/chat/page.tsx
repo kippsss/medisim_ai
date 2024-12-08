@@ -96,13 +96,15 @@ export default function Chat() {
       <ChatConversation messages={messages} loading={loading} />
       {/* TEXT INPUT AND ACTION BUTTONS */}
       <div className="flex flex-col gap-2 sm:gap-4">
+        <div className="flex justify-end">
+          <ChatDiagnoseModal startScenario={startScenario} />
+        </div>
         <ChatInput
           input={input}
           handleInputChange={handleInputChange}
           handleFormSubmit={handleFormSubmit}
           disabled={loading}
         />
-        <ChatDiagnoseModal startScenario={startScenario} />
       </div>
     </DefaultPageContainer>
   );
