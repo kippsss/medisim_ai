@@ -14,7 +14,7 @@ const mapping = {
 
 export const Alert = ({ type, message }: Props) => {
   return (
-    <div role="alert" className={`alert ${mapping[type]}`}>
+    <div role="alert" className={`px-4 py-3 alert ${mapping[type]}`}>
       {message}
     </div>
   );
