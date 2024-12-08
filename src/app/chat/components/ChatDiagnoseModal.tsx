@@ -27,9 +27,9 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
   const [searchedDiagnoses, setSearchedDiagnoses] = useState<string[]>([]);
   // Flatten the possibleDiagnoses object to get an array of selected diagnoses
   const selectedDiagnosesFlattened = Object.entries(possibleDiagnoses).flatMap(
-    ([_, diagnoses]) =>
+    ([, diagnoses]) =>
       Object.entries(diagnoses)
-        .filter(([_, value]) => value)
+        .filter(([, value]) => value)
         .map(([diagnosis]) => diagnosis),
   );
 
