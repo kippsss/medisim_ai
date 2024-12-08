@@ -1,7 +1,6 @@
 'use client';
 
 import { DIAGNOSES_HEADER } from '../constants';
-import { useState } from 'react';
 import { PossibleDiagnoses } from '@/app/schema';
 
 interface Props {
