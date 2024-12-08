@@ -122,7 +122,7 @@ export default function ChatDiagnoseModal({ startScenario }: Props) {
 
   return (
     <>
-      <button className="btn btn-primary" onClick={() => toggleModal('open')}>
+      <button className="btn" onClick={() => toggleModal('open')}>
         Diagnose
       </button>
       <dialog id="diagnose-modal" className="modal">
