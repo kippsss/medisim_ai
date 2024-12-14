@@ -24,6 +24,7 @@ export default function ChatInput({
           value={input}
           onChange={handleInputChange}
         />
+        {/* Submit Button */}
         <button
           className={`btn btn-circle w-9 h-9 min-h-2 ${
             (disabled || input === '') && 'btn-disabled'
