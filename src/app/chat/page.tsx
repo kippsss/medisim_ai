@@ -3,6 +3,8 @@ import ChatConversation from './components/ChatConversation';
 import ChatInput from './components/ChatInput';
 import { useEffect, useState } from 'react';
 import { Message } from './schema';
+import Image from 'next/image';
+
 import {
   SYSTEM_PROMPT_PERSONA,
   SYSTEM_PROMPT_INSTRUCTIONS,
@@ -16,6 +18,7 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
   const [loading, setLoading] = useState(false);
+  const [recording, setRecording] = useState(false);
 
   // // For POC, we set modality to be text-to-text (ttt) only
   // const modality = 'ttt';
@@ -90,6 +93,10 @@ export default function Chat() {
     }
   };
 
+  const toggleRecording = () => {
+    setRecording(!recording);
+  };
+
   return (
     <DefaultPageContainer classes="justify-between h-screen overflow-y-hidden gap-10">
       {/* CONVERSATION */}
@@ -99,12 +106,28 @@ export default function Chat() {
         <div className="flex justify-end">
           <ChatDiagnoseModal startScenario={startScenario} />
         </div>
-        <ChatInput
-          input={input}
-          handleInputChange={handleInputChange}
-          handleFormSubmit={handleFormSubmit}
-          disabled={loading}
-        />
+        <div className="flex items-center gap-2">
+          <ChatInput
+            input={input}
+            handleInputChange={handleInputChange}
+            handleFormSubmit={handleFormSubmit}
+            disabled={loading || recording}
+          />
+          {/* Record Button */}
+          <button
+            className={`btn btn-circle w-9 h-9 min-h-2`}
+            onClick={toggleRecording}
+          >
+            <Image
+              src={
+                !recording ? 'icons/microphone.svg' : 'icons/stopRounded.svg'
+              }
+              alt={'Record'}
+              width={33}
+              height={33}
+            />
+          </button>
+        </div>
       </div>
     </DefaultPageContainer>
   );
