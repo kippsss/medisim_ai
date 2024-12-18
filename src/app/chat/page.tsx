@@ -87,7 +87,7 @@ export default function Chat() {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (input.trim() !== '') {
+    if (!(loading || recording) && input.trim() !== '') {
       addMessage(input);
       setInput('');
     }
