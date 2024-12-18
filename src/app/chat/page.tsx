@@ -105,14 +105,11 @@ export default function Chat() {
   }, [audioChunk]);
 
   const toggleRecording = async () => {
-    console.log('Recording:', recording);
     if (recording) {
-      console.log('Stopping recording:', recording);
       // Stop recording
       mediaRecorderRef.current?.stop();
       setRecording(false);
     } else {
-      console.log('starting recording:', recording);
       // Start recording
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
