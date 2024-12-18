@@ -1,7 +1,7 @@
 'use client';
 import ChatConversation from './components/ChatConversation';
 import ChatInput from './components/ChatInput';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Message } from './schema';
 import Image from 'next/image';
 
@@ -19,6 +19,8 @@ export default function Chat() {
   const [input, setInput] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [recording, setRecording] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const [audioChunk, setAudioChunk] = useState<Blob | null>(null);
 
   // // For POC, we set modality to be text-to-text (ttt) only
   // const modality = 'ttt';
@@ -93,8 +95,36 @@ export default function Chat() {
     }
   };
 
-  const toggleRecording = () => {
-    setRecording(!recording);
+  useEffect(() => {
+    if (audioChunk) {
+      const audioBlob = new Blob([audioChunk], { type: 'audio/wav' });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+    }
+  }, [audioChunk]);
+
+  const toggleRecording = async () => {
+    console.log('Recording:', recording);
+    if (recording) {
+      console.log('Stopping recording:', recording);
+      // Stop recording
+      mediaRecorderRef.current?.stop();
+      setRecording(false);
+    } else {
+      console.log('starting recording:', recording);
+      // Start recording
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (event) => {
+        setAudioChunk(event.data);
+      };
+
+      mediaRecorder.start();
+      setRecording(true);
+    }
   };
 
   return (
