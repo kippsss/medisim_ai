@@ -96,11 +96,28 @@ export default function Chat() {
   };
 
   useEffect(() => {
+    const transcribeAudio = async (audioBlob: Blob) => {
+      const formData = new FormData();
+      formData.append('file', audioBlob, 'audio.wav');
+      formData.append('model', 'whisper-1');
+
+      try {
+        const response = await fetch('/api/transcribe', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+        setInput(data.text);
+      } catch (error) {
+        console.error('Error transcribing audio:', error);
+        setInput('Error transcribing audio');
+      }
+    };
+
     if (audioChunk) {
       const audioBlob = new Blob([audioChunk], { type: 'audio/wav' });
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      audio.play();
+      transcribeAudio(audioBlob);
     }
   }, [audioChunk]);
 
@@ -150,8 +167,8 @@ export default function Chat() {
                 !recording ? 'icons/microphone.svg' : 'icons/stopRounded.svg'
               }
               alt={'Record'}
-              width={33}
-              height={33}
+              width={28}
+              height={28}
             />
           </button>
         </div>
