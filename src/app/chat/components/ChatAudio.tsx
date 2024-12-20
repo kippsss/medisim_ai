@@ -3,17 +3,20 @@ import { useRef, useState } from 'react';
 import Image from 'next/image';
 interface Props {
   toggleRecording: () => void;
+  transcriptionLoading: boolean;
   recordingElapsedTime: number;
 }
 
 export default function ChatAudio({
   toggleRecording,
+  transcriptionLoading,
   recordingElapsedTime,
 }: Props) {
+  const recording = recordingElapsedTime !== 0;
   return (
     <div
       className={`radial-progress after:content-none ${
-        recordingElapsedTime === 0 ? 'before:content-none' : ''
+        recording ? '' : 'before:content-none'
       }`}
       style={
         {
@@ -28,16 +31,16 @@ export default function ChatAudio({
         className="btn btn-circle w-9 h-9 min-h-2 z-10"
         onClick={toggleRecording}
       >
-        <Image
-          src={
-            recordingElapsedTime === 0
-              ? 'icons/microphone.svg'
-              : 'icons/stopRounded.svg'
-          }
-          alt={'Record'}
-          width={28}
-          height={28}
-        />
+        {transcriptionLoading ? (
+          <span className="loading loading-ring loading-xs"></span>
+        ) : (
+          <Image
+            src={recording ? 'icons/stopRounded.svg' : 'icons/microphone.svg'}
+            alt={'Record'}
+            width={28}
+            height={28}
+          />
+        )}
       </button>
     </div>
   );

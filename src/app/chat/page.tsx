@@ -207,6 +207,7 @@ export default function Chat() {
           />
           <ChatAudio
             recordingElapsedTime={recordingElapsedTime}
+            transcriptionLoading={transcriptionLoading}
             toggleRecording={toggleRecording}
           />
         </div>
