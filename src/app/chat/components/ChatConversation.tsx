@@ -1,5 +1,4 @@
 'use client';
-import ChatAudio from './ChatAudio';
 import { Message } from '../schema';
 
 interface Props {
@@ -28,7 +27,6 @@ export default function ChatConversation({ messages, loading }: Props) {
               className={`${message.role === 'assistant' ? '' : 'chat-bubble'}`}
             >
               {message.content}
-              {message.audioId && <ChatAudio audioId={message.audioId} />}
             </div>
           </div>
         );

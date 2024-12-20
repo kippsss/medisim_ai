@@ -5,7 +5,7 @@ interface Props {
   audioId: string;
 }
 
-export default function ChatAudio({ audioId }: Props) {
+export default function ChatAudioLegacy({ audioId }: Props) {
   const [progress, setProgress] = useState(0);
   const [playing, setPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
