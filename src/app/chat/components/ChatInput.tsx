@@ -5,24 +5,29 @@ interface Props {
   input: string;
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleFormSubmit: (e: FormEvent<HTMLFormElement>) => void;
-  disabled?: boolean;
+  placeholderText: string;
+  transcriptionLoading: boolean;
+  disabled: boolean;
 }
 
 export default function ChatInput({
   input,
   handleInputChange,
   handleFormSubmit,
-  disabled = false,
+  placeholderText,
+  transcriptionLoading,
+  disabled,
 }: Props) {
   return (
     <form onSubmit={handleFormSubmit} className="w-full">
       <label className="input input-bordered flex items-center rounded-full pl-5 pr-3">
         <input
           type="text"
-          placeholder="Message medisimAI"
+          placeholder={placeholderText}
           className="grow"
           value={input}
           onChange={handleInputChange}
+          disabled={disabled || transcriptionLoading}
         />
         {/* Submit Button */}
         <button
