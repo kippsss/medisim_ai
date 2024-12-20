@@ -34,9 +34,7 @@ export default function ChatInput({
           className={`btn btn-circle w-9 h-9 min-h-2 ${
             (disabled || input === '') && 'btn-disabled'
           }`}
-          onClick={() => {
-            handleFormSubmit;
-          }}
+          type="submit"
         >
           <Image
             src={'icons/arrowUp.svg'}
