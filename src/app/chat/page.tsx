@@ -3,7 +3,6 @@ import ChatConversation from './components/ChatConversation';
 import ChatInput from './components/ChatInput';
 import { useEffect, useRef, useState } from 'react';
 import { Message } from './schema';
-import Image from 'next/image';
 
 import {
   SYSTEM_PROMPT_PERSONA,
@@ -13,22 +12,23 @@ import {
 } from './constants';
 import ChatDiagnoseModal from './components/ChatDiagnoseModal';
 import { DefaultPageContainer } from '../components/DefaultPageContainer';
+import ChatAudio from './components/ChatAudio';
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [recording, setRecording] = useState(false);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const [audioChunk, setAudioChunk] = useState<Blob | null>(null);
+  const [recordingElapsedTime, setRecordingElapsedTime] = useState(5);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
-  // // For POC, we set modality to be text-to-text (ttt) only
-  // const modality = 'ttt';
-
+  // Start role play scenario as soon as user navigates to the page
   useEffect(() => {
     startScenario();
   }, []);
 
+  // Send conversation to the assistant when the user sends a message
   useEffect(() => {
     if (
       messages.length !== 0 &&
@@ -37,6 +37,33 @@ export default function Chat() {
       chatCompletion(messages);
     }
   }, [messages]);
+
+  // Transribe audio when user stops recording audio
+  useEffect(() => {
+    const transcribeAudio = async (audioBlob: Blob) => {
+      const formData = new FormData();
+      formData.append('file', audioBlob, 'audio.wav');
+      formData.append('model', 'whisper-1');
+
+      try {
+        const response = await fetch('/api/transcribe', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+        setInput(data.text);
+      } catch (error) {
+        console.error('Error transcribing audio:', error);
+        setInput('Error transcribing audio');
+      }
+    };
+
+    if (audioChunk) {
+      const audioBlob = new Blob([audioChunk], { type: 'audio/wav' });
+      transcribeAudio(audioBlob);
+    }
+  }, [audioChunk]);
 
   const startScenario = () => {
     const trueDiagnosis = localStorage.getItem('trueDiagnosis') || undefined;
@@ -95,32 +122,6 @@ export default function Chat() {
     }
   };
 
-  useEffect(() => {
-    const transcribeAudio = async (audioBlob: Blob) => {
-      const formData = new FormData();
-      formData.append('file', audioBlob, 'audio.wav');
-      formData.append('model', 'whisper-1');
-
-      try {
-        const response = await fetch('/api/transcribe', {
-          method: 'POST',
-          body: formData,
-        });
-
-        const data = await response.json();
-        setInput(data.text);
-      } catch (error) {
-        console.error('Error transcribing audio:', error);
-        setInput('Error transcribing audio');
-      }
-    };
-
-    if (audioChunk) {
-      const audioBlob = new Blob([audioChunk], { type: 'audio/wav' });
-      transcribeAudio(audioBlob);
-    }
-  }, [audioChunk]);
-
   const toggleRecording = async () => {
     if (recording) {
       // Stop recording
@@ -157,20 +158,11 @@ export default function Chat() {
             handleFormSubmit={handleFormSubmit}
             disabled={loading || recording}
           />
-          {/* Record Button */}
-          <button
-            className={`btn btn-circle w-9 h-9 min-h-2`}
-            onClick={toggleRecording}
-          >
-            <Image
-              src={
-                !recording ? 'icons/microphone.svg' : 'icons/stopRounded.svg'
-              }
-              alt={'Record'}
-              width={28}
-              height={28}
-            />
-          </button>
+          <ChatAudio
+            recordingElapsedTime={recordingElapsedTime}
+            recording={recording}
+            toggleRecording={toggleRecording}
+          />
         </div>
       </div>
     </DefaultPageContainer>
