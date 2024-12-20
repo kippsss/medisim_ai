@@ -3,10 +3,13 @@ import { Message } from '../schema';
 
 interface Props {
   messages: Message[];
-  loading: boolean;
+  completionLoading: boolean;
 }
 
-export default function ChatConversation({ messages, loading }: Props) {
+export default function ChatConversation({
+  messages,
+  completionLoading,
+}: Props) {
   return (
     <div className="flex flex-col gap-8 overflow-y-auto">
       {messages.map((message, index) => {
@@ -31,7 +34,9 @@ export default function ChatConversation({ messages, loading }: Props) {
           </div>
         );
       })}
-      {loading && <span className="loading loading-dots loading-md"></span>}
+      {completionLoading && (
+        <span className="loading loading-dots loading-md"></span>
+      )}
     </div>
   );
 }

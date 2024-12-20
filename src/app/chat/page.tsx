@@ -17,7 +17,8 @@ import ChatAudio from './components/ChatAudio';
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
-  const [loading, setLoading] = useState(false);
+  const [completionLoading, setCompletionLoading] = useState(false);
+  const [transcriptionLoading, setTranscriptionLoading] = useState(false);
   const [audioChunk, setAudioChunk] = useState<Blob | null>(null);
   const [recordingElapsedTime, setRecordingElapsedTime] = useState(0);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -47,6 +48,7 @@ export default function Chat() {
       formData.append('model', 'whisper-1');
 
       try {
+        setTranscriptionLoading(true);
         const response = await fetch('/api/transcribe', {
           method: 'POST',
           body: formData,
@@ -54,6 +56,7 @@ export default function Chat() {
 
         const data = await response.json();
         setInput(data.text);
+        setTranscriptionLoading(false);
       } catch (error) {
         console.error('Error transcribing audio:', error);
         setInput('Error transcribing audio');
@@ -83,14 +86,14 @@ export default function Chat() {
   };
 
   const chatCompletion = async (messages: Message[]) => {
-    setLoading(true);
+    setCompletionLoading(true);
     if (process.env.NEXT_PUBLIC_MOCK_OPENAI_API === 'true') {
       const assistantMessage: Message = {
         role: 'assistant',
         content: 'This is a mocked response from the assistant',
       };
       setMessages((prevMessages) => [...prevMessages, assistantMessage]);
-      return setLoading(false);
+      return setCompletionLoading(false);
     }
 
     const response = await fetch('/api/chat/ttt-chat', {
@@ -108,7 +111,7 @@ export default function Chat() {
       };
       setMessages((prevMessages) => [...prevMessages, assistantMessage]);
     }
-    setLoading(false);
+    setCompletionLoading(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,13 +120,17 @@ export default function Chat() {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!(loading || recordingElapsedTime !== 0) && input.trim() !== '') {
+    if (
+      !(completionLoading || recordingElapsedTime !== 0) &&
+      input.trim() !== ''
+    ) {
       addMessage(input);
       setInput('');
     }
   };
 
   const startRecording = async () => {
+    setInput('');
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mediaRecorder = new MediaRecorder(stream);
     mediaRecorderRef.current = mediaRecorder;
@@ -167,10 +174,23 @@ export default function Chat() {
     }
   };
 
+  const getPlaceholderText = () => {
+    if (transcriptionLoading) {
+      return 'Transcribing audio ...';
+    } else if (recordingElapsedTime !== 0) {
+      return 'Recording audio ...';
+    } else {
+      return 'Message medisimAI';
+    }
+  };
+
   return (
     <DefaultPageContainer classes="justify-between h-screen overflow-y-hidden gap-10">
       {/* CONVERSATION */}
-      <ChatConversation messages={messages} loading={loading} />
+      <ChatConversation
+        messages={messages}
+        completionLoading={completionLoading}
+      />
       {/* TEXT INPUT AND ACTION BUTTONS */}
       <div className="flex flex-col gap-2 sm:gap-4">
         <div className="flex justify-end">
@@ -181,7 +201,9 @@ export default function Chat() {
             input={input}
             handleInputChange={handleInputChange}
             handleFormSubmit={handleFormSubmit}
-            disabled={loading || recordingElapsedTime !== 0}
+            placeholderText={getPlaceholderText()}
+            transcriptionLoading={transcriptionLoading}
+            disabled={completionLoading || recordingElapsedTime !== 0}
           />
           <ChatAudio
             recordingElapsedTime={recordingElapsedTime}
