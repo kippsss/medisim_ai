@@ -18,10 +18,11 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const [recording, setRecording] = useState(false);
   const [audioChunk, setAudioChunk] = useState<Blob | null>(null);
-  const [recordingElapsedTime, setRecordingElapsedTime] = useState(5);
+  const [recordingElapsedTime, setRecordingElapsedTime] = useState(0);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recordingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Start role play scenario as soon as user navigates to the page
   useEffect(() => {
@@ -116,29 +117,53 @@ export default function Chat() {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!(loading || recording) && input.trim() !== '') {
+    if (!(loading || recordingElapsedTime !== 0) && input.trim() !== '') {
       addMessage(input);
       setInput('');
     }
   };
 
-  const toggleRecording = async () => {
-    if (recording) {
-      // Stop recording
+  const startRecording = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mediaRecorder = new MediaRecorder(stream);
+    mediaRecorderRef.current = mediaRecorder;
+
+    mediaRecorder.ondataavailable = (event) => {
+      setAudioChunk(event.data);
+    };
+
+    mediaRecorder.start();
+
+    // Set a timeout to stop recording after 20 seconds
+    recordingTimeoutRef.current = setTimeout(() => {
+      stopRecording();
+    }, 20000); // 20 seconds
+
+    setRecordingElapsedTime(0.1); // Start from 0.1 to avoid 0 value so that icon button changes
+    // Set an interval to update elapsed time every second
+    intervalRef.current = setInterval(() => {
+      setRecordingElapsedTime((prevTime) => prevTime + 1);
+    }, 1000);
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
       mediaRecorderRef.current?.stop();
-      setRecording(false);
+      if (recordingTimeoutRef.current) {
+        clearTimeout(recordingTimeoutRef.current);
+      }
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+      setRecordingElapsedTime(0);
+    }
+  };
+
+  const toggleRecording = async () => {
+    if (recordingElapsedTime !== 0) {
+      stopRecording();
     } else {
-      // Start recording
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-
-      mediaRecorder.ondataavailable = (event) => {
-        setAudioChunk(event.data);
-      };
-
-      mediaRecorder.start();
-      setRecording(true);
+      startRecording();
     }
   };
 
@@ -156,11 +181,10 @@ export default function Chat() {
             input={input}
             handleInputChange={handleInputChange}
             handleFormSubmit={handleFormSubmit}
-            disabled={loading || recording}
+            disabled={loading || recordingElapsedTime !== 0}
           />
           <ChatAudio
             recordingElapsedTime={recordingElapsedTime}
-            recording={recording}
             toggleRecording={toggleRecording}
           />
         </div>
